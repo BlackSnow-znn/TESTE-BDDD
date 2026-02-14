@@ -560,7 +560,7 @@
 <script>
 const supabaseUrl = "https://osrhdtzdbvasbejtglrb.supabase.co";
 const supabaseKey = "sb_publishable_iypphmUmhyWH9bSDf-swoA_a0wJ_JJO";
-const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+const supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
 
 /* SEU JS TODO AQUI */
 </script>
@@ -610,7 +610,7 @@ async function handleSend() {
     };
 
     // SALVA NO SUPABASE
-    const { error } = await supabase
+    const { error } = await supabaseClient
         .from('messages')
         .insert([newMessage]);
 
@@ -624,7 +624,7 @@ async function handleSend() {
     loadMessagesFromDB();
 }
 async function loadMessagesFromDB() {
-    const { data, error } = await supabase
+    const { data, error } = await supabaseClient
         .from('messages')
         .select('*')
         .order('id', { ascending: true });
@@ -747,7 +747,7 @@ async function loadMessagesFromDB() {
         window.onclick = () => contextMenu.style.display = 'none';
 
 async function deleteTargetMessage() {
-    await supabase
+    await supabaseClient
         .from('messages')
         .delete()
         .eq('id', state.currentDeleteId);
@@ -759,7 +759,7 @@ async function deleteTargetMessage() {
 
 async function clearAllMessages() {
     if (confirm("Tem certeza que deseja apagar todo o chat?")) {
-        await supabase
+        await supabaseClient
             .from('messages')
             .delete()
             .neq('id', 0);
