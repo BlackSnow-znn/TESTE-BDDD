@@ -1,924 +1,1689 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Marcos Bank | Fintech Premium</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>Marcos Bank - Seu banco digital</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        :root {
-            --primary: #dc2626;
-            --primary-dark: #991b1b;
-            --secondary: #f3f4f6;
-            --white: #ffffff;
-            --black: #0f172a;
-            --gray-100: #f1f5f9;
-            --gray-200: #e2e8f0;
-            --gray-400: #94a3b8;
-            --gray-600: #475569;
-            --success: #10b981;
-            --danger: #ef4444;
-            --warning: #f59e0b;
-            --sidebar-width: 260px;
-            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary-red: #dc0032;
+            --dark-red: #b30028;
+            --light-red: #ff1744;
+            --white: #ffffff;
+            --off-white: #f8f9fa;
+            --gray-100: #f5f5f5;
+            --gray-200: #e0e0e0;
+            --gray-300: #bdbdbd;
+            --gray-400: #9e9e9e;
+            --gray-500: #757575;
+            --gray-600: #616161;
+            --gray-700: #424242;
+            --gray-800: #303030;
+            --gray-900: #212121;
+            --black: #000000;
+            --success: #00c853;
+            --warning: #ffc107;
+            --danger: #d32f2f;
+            --info: #2196f3;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.15);
+            --shadow-lg: 0 8px 24px rgba(0,0,0,0.2);
+            --shadow-xl: 0 16px 48px rgba(0,0,0,0.3);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         body {
-            background-color: var(--gray-100);
-            color: var(--black);
+            background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+            min-height: 100vh;
             overflow-x: hidden;
+        }
+
+        .app-container {
+            width: 100%;
             min-height: 100vh;
         }
-
-        button {
-            cursor: pointer;
-            border: none;
-            outline: none;
-            transition: var(--transition);
-        }
-
-        input {
-            outline: none;
-            transition: var(--transition);
-        }
-
-        /* UTILS */
-        .hidden { display: none !important; }
-        .flex { display: flex; }
-        .center { align-items: center; justify-content: center; }
-
-        /* SCROLLBAR */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: var(--gray-100); }
-        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
-
-        /* ANIMATIONS */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .animate-fade { animation: fadeIn 0.4s ease forwards; }
 
         /* AUTH SCREENS */
-        #auth-container {
-            min-height: 100vh;
+        .auth-wrapper {
             display: flex;
             align-items: center;
             justify-content: center;
-            background: linear-gradient(135deg, var(--primary) 0%, #7f1d1d 100%);
+            min-height: 100vh;
             padding: 20px;
+            background: linear-gradient(135deg, var(--primary-red) 0%, var(--dark-red) 100%);
         }
 
-        .auth-card {
+        .auth-box {
             background: var(--white);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-xl);
+            padding: 48px;
             width: 100%;
             max-width: 450px;
-            padding: 40px;
-            border-radius: 24px;
-            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .auth-logo {
             text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .auth-logo i {
-            font-size: 3rem;
-            color: var(--primary);
+            margin-bottom: 32px;
         }
 
         .auth-logo h1 {
-            font-weight: 800;
-            font-size: 1.8rem;
-            letter-spacing: -1px;
-            margin-top: 10px;
-        }
-
-        .auth-logo span { color: var(--primary); }
-
-        .form-group { margin-bottom: 20px; }
-
-        .form-group label {
-            display: block;
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--gray-600);
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-red);
             margin-bottom: 8px;
         }
 
-        .form-control {
-            width: 100%;
-            padding: 14px 16px;
-            border: 2px solid var(--gray-200);
-            border-radius: 12px;
-            font-size: 1rem;
-        }
-
-        .form-control:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.1);
-        }
-
-        .btn-primary {
-            width: 100%;
-            padding: 16px;
-            background-color: var(--primary);
-            color: var(--white);
-            border-radius: 12px;
-            font-weight: 700;
-            font-size: 1rem;
-            margin-top: 10px;
-        }
-
-        .btn-primary:hover {
-            background-color: var(--primary-dark);
-            transform: translateY(-2px);
-        }
-
-        .auth-footer {
-            text-align: center;
-            margin-top: 25px;
-            font-size: 0.9rem;
+        .auth-logo p {
             color: var(--gray-600);
+            font-size: 0.95rem;
         }
 
-        .auth-footer a {
-            color: var(--primary);
-            text-decoration: none;
-            font-weight: 700;
-        }
-
-        /* APP LAYOUT */
-        #app-container {
+        .auth-tabs {
             display: flex;
-            min-height: 100vh;
-        }
-
-        /* SIDEBAR */
-        .sidebar {
-            width: var(--sidebar-width);
-            background-color: var(--white);
-            border-right: 1px solid var(--gray-200);
-            display: flex;
-            flex-direction: column;
-            padding: 30px 20px;
-            position: fixed;
-            height: 100vh;
-            z-index: 100;
-        }
-
-        .sidebar-logo {
-            display: flex;
-            align-items: center;
             gap: 12px;
-            margin-bottom: 50px;
-            padding-left: 10px;
+            margin-bottom: 32px;
+            background: var(--gray-100);
+            padding: 6px;
+            border-radius: var(--radius-md);
         }
 
-        .sidebar-logo i {
-            color: var(--primary);
-            font-size: 1.8rem;
-        }
-
-        .sidebar-logo h2 {
-            font-weight: 800;
-            font-size: 1.2rem;
-        }
-
-        .nav-menu {
-            list-style: none;
+        .auth-tab {
             flex: 1;
-        }
-
-        .nav-item {
-            margin-bottom: 8px;
-        }
-
-        .nav-link {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 14px 18px;
+            padding: 12px;
+            border: none;
+            background: transparent;
             color: var(--gray-600);
-            text-decoration: none;
             font-weight: 600;
-            border-radius: 12px;
+            cursor: pointer;
+            border-radius: var(--radius-sm);
             transition: var(--transition);
         }
 
-        .nav-link:hover, .nav-link.active {
-            background-color: rgba(220, 38, 38, 0.08);
-            color: var(--primary);
+        .auth-tab.active {
+            background: var(--white);
+            color: var(--primary-red);
+            box-shadow: var(--shadow-sm);
         }
 
-        .nav-link i { font-size: 1.2rem; }
+        .form-group {
+            margin-bottom: 24px;
+        }
 
-        .user-profile-mini {
-            margin-top: auto;
-            padding: 20px 10px;
-            border-top: 1px solid var(--gray-200);
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--gray-700);
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius-md);
+            font-size: 1rem;
+            transition: var(--transition);
+            background: var(--white);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-red);
+            box-shadow: 0 0 0 3px rgba(220, 0, 50, 0.1);
+        }
+
+        .form-input.error {
+            border-color: var(--danger);
+        }
+
+        .error-message {
+            color: var(--danger);
+            font-size: 0.85rem;
+            margin-top: 6px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--primary-red);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background: var(--dark-red);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary:disabled {
+            background: var(--gray-300);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: var(--gray-100);
+            color: var(--gray-700);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray-200);
+        }
+
+        /* DASHBOARD */
+        .dashboard {
+            display: none;
+        }
+
+        .dashboard.active {
+            display: block;
+        }
+
+        .dashboard-header {
+            background: linear-gradient(135deg, var(--primary-red) 0%, var(--dark-red) 100%);
+            color: var(--white);
+            padding: 24px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .dashboard-header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dashboard-brand {
             display: flex;
             align-items: center;
             gap: 12px;
         }
 
-        .avatar {
-            width: 45px;
-            height: 45px;
-            background-color: var(--primary);
-            color: var(--white);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
-            font-size: 1.2rem;
-        }
-
-        .profile-info h4 {
-            font-size: 0.9rem;
-            font-weight: 700;
-            max-width: 140px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .profile-info p {
-            font-size: 0.75rem;
-            color: var(--gray-400);
-        }
-
-        /* MAIN CONTENT */
-        .main-content {
-            flex: 1;
-            margin-left: var(--sidebar-width);
-            padding: 40px;
-        }
-
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 40px;
-        }
-
-        .header-title h1 {
-            font-size: 1.8rem;
-            font-weight: 800;
-        }
-
-        .header-title p {
-            color: var(--gray-600);
-            font-weight: 500;
-        }
-
-        .header-actions {
-            display: flex;
-            gap: 15px;
-        }
-
-        .btn-icon {
-            width: 45px;
-            height: 45px;
-            background: var(--white);
-            border-radius: 12px;
-            color: var(--gray-600);
-            box-shadow: var(--shadow);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* DASHBOARD CARDS */
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 25px;
-            margin-bottom: 40px;
-        }
-
-        .card {
-            background: var(--white);
-            padding: 30px;
-            border-radius: 24px;
-            box-shadow: var(--shadow);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .card-balance {
-            background: linear-gradient(135deg, var(--primary) 0%, #b91c1c 100%);
-            color: var(--white);
-        }
-
-        .card-label {
-            font-size: 0.9rem;
-            font-weight: 600;
-            opacity: 0.9;
-            margin-bottom: 10px;
-            display: block;
-        }
-
-        .card-value {
-            font-size: 2.2rem;
-            font-weight: 800;
-            margin-bottom: 20px;
-        }
-
-        .card-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .pix-key-badge {
-            background: rgba(255,255,255,0.2);
-            padding: 6px 12px;
-            border-radius: 100px;
-            font-size: 0.75rem;
+        .dashboard-brand h1 {
+            font-size: 1.5rem;
             font-weight: 700;
         }
 
-        .card-poupanca {
-            border-left: 6px solid var(--success);
-        }
-
-        .card-poupanca .card-value {
-            color: var(--black);
-        }
-
-        .stat-card {
+        .dashboard-user {
             display: flex;
             align-items: center;
             gap: 20px;
         }
 
-        .stat-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 18px;
-            background: rgba(220, 38, 38, 0.1);
-            color: var(--primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
+        .user-info {
+            text-align: right;
         }
 
-        .stat-info h3 {
-            font-size: 1.4rem;
-            font-weight: 800;
+        .user-info p {
+            font-size: 0.9rem;
+            opacity: 0.9;
         }
 
-        .stat-info p {
-            font-size: 0.85rem;
-            color: var(--gray-600);
+        .user-info strong {
+            font-size: 1.1rem;
+        }
+
+        .btn-logout {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: var(--white);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: var(--transition);
             font-weight: 600;
         }
 
-        /* TRANSACTIONS SECTION */
-        .section-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 30px;
+        .btn-logout:hover {
+            background: rgba(255, 255, 255, 0.3);
         }
 
-        .transactions-list {
+        .dashboard-nav {
             background: var(--white);
-            border-radius: 24px;
-            padding: 30px;
-            box-shadow: var(--shadow);
+            border-bottom: 1px solid var(--gray-200);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-sm);
         }
 
-        .section-header {
+        .dashboard-nav-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            gap: 8px;
+            padding: 0 24px;
+        }
+
+        .nav-tab {
+            padding: 16px 24px;
+            background: transparent;
+            border: none;
+            color: var(--gray-600);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            border-bottom: 3px solid transparent;
+            position: relative;
+        }
+
+        .nav-tab:hover {
+            color: var(--primary-red);
+            background: var(--gray-100);
+        }
+
+        .nav-tab.active {
+            color: var(--primary-red);
+            border-bottom-color: var(--primary-red);
+        }
+
+        .dashboard-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 32px 24px;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        /* CARDS */
+        .card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 24px;
+        }
+
+        .card-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid var(--gray-100);
         }
 
-        .section-header h2 {
-            font-size: 1.3rem;
-            font-weight: 800;
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--gray-800);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-title i {
+            color: var(--primary-red);
+        }
+
+        /* BALANCE CARDS */
+        .balance-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .balance-card {
+            background: linear-gradient(135deg, var(--primary-red) 0%, var(--dark-red) 100%);
+            color: var(--white);
+            padding: 28px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .balance-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+
+        .balance-card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            opacity: 0.9;
+        }
+
+        .balance-card-header i {
+            font-size: 1.5rem;
+        }
+
+        .balance-card-header span {
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .balance-amount {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .balance-info {
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+
+        .balance-card.secondary {
+            background: linear-gradient(135deg, #424242 0%, #303030 100%);
+        }
+
+        .balance-card.tertiary {
+            background: linear-gradient(135deg, #00695c 0%, #004d40 100%);
+        }
+
+        /* STATS GRID */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: var(--white);
+            padding: 20px;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            border-left: 4px solid var(--primary-red);
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--gray-600);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--gray-800);
+        }
+
+        /* PIX SECTION */
+        .pix-form {
+            max-width: 600px;
+        }
+
+        .input-with-icon {
+            position: relative;
+        }
+
+        .input-with-icon i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-400);
+        }
+
+        .input-with-icon .form-input {
+            padding-left: 48px;
+        }
+
+        .pix-key-display {
+            background: var(--gray-100);
+            padding: 16px;
+            border-radius: var(--radius-md);
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .pix-key-display strong {
+            color: var(--gray-700);
+            font-size: 0.9rem;
+        }
+
+        .pix-key-display code {
+            background: var(--white);
+            padding: 8px 12px;
+            border-radius: var(--radius-sm);
+            font-family: 'Courier New', monospace;
+            color: var(--primary-red);
+            font-weight: 600;
+        }
+
+        .btn-copy {
+            padding: 8px 16px;
+            background: var(--primary-red);
+            color: var(--white);
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+        }
+
+        .btn-copy:hover {
+            background: var(--dark-red);
+        }
+
+        /* TRANSACTIONS */
+        .transactions-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
         }
 
         .transaction-item {
+            background: var(--white);
+            padding: 16px;
+            border-radius: var(--radius-md);
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 15px;
-            padding: 18px 0;
-            border-bottom: 1px solid var(--gray-100);
+            border: 1px solid var(--gray-200);
+            transition: var(--transition);
         }
 
-        .transaction-item:last-child { border-bottom: none; }
+        .transaction-item:hover {
+            box-shadow: var(--shadow-sm);
+            border-color: var(--primary-red);
+        }
 
-        .t-icon {
+        .transaction-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .transaction-icon {
             width: 48px;
             height: 48px;
-            border-radius: 14px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 1.2rem;
         }
 
-        .t-icon.pix { background: #e0f2fe; color: #0ea5e9; }
-        .t-icon.deposito { background: #dcfce7; color: #22c55e; }
-        .t-icon.saque { background: #fee2e2; color: #ef4444; }
-        .t-icon.poupanca { background: #fef3c7; color: #f59e0b; }
+        .transaction-icon.pix {
+            background: #00c853;
+            color: var(--white);
+        }
 
-        .t-info { flex: 1; }
-        .t-info h4 { font-size: 0.95rem; font-weight: 700; }
-        .t-info p { font-size: 0.8rem; color: var(--gray-400); }
+        .transaction-icon.deposito {
+            background: #2196f3;
+            color: var(--white);
+        }
 
-        .t-amount {
-            text-align: right;
-            font-weight: 800;
+        .transaction-icon.saque {
+            background: #ff5722;
+            color: var(--white);
+        }
+
+        .transaction-icon.poupanca {
+            background: #9c27b0;
+            color: var(--white);
+        }
+
+        .transaction-details h4 {
             font-size: 1rem;
+            color: var(--gray-800);
+            margin-bottom: 4px;
         }
 
-        .amount-positive { color: var(--success); }
-        .amount-negative { color: var(--danger); }
-
-        /* MODAIS */
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.6);
-            backdrop-filter: blur(5px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 2000;
-            opacity: 0;
-            pointer-events: none;
-            transition: var(--transition);
+        .transaction-details p {
+            font-size: 0.85rem;
+            color: var(--gray-500);
         }
 
-        .modal-overlay.active {
-            opacity: 1;
-            pointer-events: auto;
+        .transaction-amount {
+            text-align: right;
         }
 
-        .modal {
-            background: var(--white);
-            width: 100%;
-            max-width: 500px;
-            border-radius: 28px;
-            padding: 40px;
-            position: relative;
-            transform: scale(0.9);
-            transition: var(--transition);
+        .transaction-amount .amount {
+            font-size: 1.3rem;
+            font-weight: 700;
         }
 
-        .modal-overlay.active .modal {
-            transform: scale(1);
+        .transaction-amount.positive .amount {
+            color: var(--success);
         }
 
-        .modal-close {
-            position: absolute;
-            top: 25px;
-            right: 25px;
-            font-size: 1.5rem;
-            color: var(--gray-400);
-            background: none;
+        .transaction-amount.negative .amount {
+            color: var(--danger);
         }
 
-        .modal-title {
-            font-size: 1.5rem;
-            font-weight: 800;
-            margin-bottom: 10px;
+        .transaction-amount .date {
+            font-size: 0.8rem;
+            color: var(--gray-500);
+            margin-top: 4px;
         }
 
-        .modal-desc {
-            color: var(--gray-600);
-            font-size: 0.95rem;
-            margin-bottom: 30px;
+        /* SAVINGS */
+        .savings-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+            margin-top: 24px;
+        }
+
+        .savings-action-card {
+            background: var(--gray-100);
+            padding: 20px;
+            border-radius: var(--radius-md);
+            text-align: center;
+        }
+
+        .savings-action-card h3 {
+            color: var(--gray-800);
+            margin-bottom: 16px;
+            font-size: 1.1rem;
+        }
+
+        .earnings-display {
+            background: linear-gradient(135deg, #00695c 0%, #004d40 100%);
+            color: var(--white);
+            padding: 24px;
+            border-radius: var(--radius-md);
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .earnings-display h3 {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-bottom: 12px;
+        }
+
+        .earnings-display .amount {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .earnings-display p {
+            font-size: 0.9rem;
+            opacity: 0.8;
         }
 
         /* ADMIN PANEL */
-        .admin-table-container {
-            overflow-x: auto;
-            margin-top: 20px;
+        .admin-panel {
+            display: none;
         }
 
-        .admin-table {
+        .admin-panel.active {
+            display: block;
+        }
+
+        .admin-header {
+            background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);
+            color: var(--white);
+            padding: 32px;
+            border-radius: var(--radius-lg);
+            margin-bottom: 32px;
+            text-align: center;
+        }
+
+        .admin-header h2 {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+
+        .admin-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .admin-stat-card {
+            background: var(--white);
+            padding: 24px;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-md);
+            text-align: center;
+            border-top: 4px solid var(--primary-red);
+        }
+
+        .admin-stat-card .icon {
+            font-size: 2.5rem;
+            color: var(--primary-red);
+            margin-bottom: 12px;
+        }
+
+        .admin-stat-card .value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--gray-800);
+            margin-bottom: 8px;
+        }
+
+        .admin-stat-card .label {
+            font-size: 0.9rem;
+            color: var(--gray-600);
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .admin-search {
+            background: var(--white);
+            padding: 24px;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-md);
+            margin-bottom: 24px;
+        }
+
+        .search-grid {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 12px;
+        }
+
+        .users-table {
+            background: var(--white);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+        }
+
+        table {
             width: 100%;
             border-collapse: collapse;
         }
 
-        .admin-table th {
+        thead {
+            background: var(--gray-800);
+            color: var(--white);
+        }
+
+        th {
+            padding: 16px;
             text-align: left;
-            padding: 15px;
-            background: var(--gray-100);
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--gray-600);
-            font-weight: 700;
-        }
-
-        .admin-table td {
-            padding: 15px;
-            border-bottom: 1px solid var(--gray-100);
+            font-weight: 600;
             font-size: 0.9rem;
-            vertical-align: middle;
+            text-transform: uppercase;
         }
 
-        .status-badge {
-            padding: 5px 12px;
-            border-radius: 100px;
-            font-size: 0.75rem;
-            font-weight: 700;
+        td {
+            padding: 16px;
+            border-bottom: 1px solid var(--gray-200);
         }
 
-        .status-ativa { background: #dcfce7; color: #15803d; }
-        .status-congelada { background: #fee2e2; color: #b91c1c; }
+        tbody tr:hover {
+            background: var(--gray-100);
+        }
+
+        .user-status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .user-status.active {
+            background: rgba(0, 200, 83, 0.1);
+            color: var(--success);
+        }
+
+        .user-status.frozen {
+            background: rgba(211, 47, 47, 0.1);
+            color: var(--danger);
+        }
+
+        .admin-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
 
         .btn-sm {
-            padding: 8px 14px;
-            border-radius: 8px;
-            font-size: 0.8rem;
-            font-weight: 700;
+            padding: 6px 12px;
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: var(--transition);
         }
 
-        .btn-danger-sm { background: var(--danger); color: white; }
-        .btn-success-sm { background: var(--success); color: white; }
+        .btn-success {
+            background: var(--success);
+            color: var(--white);
+        }
 
-        /* LOADING OVERLAY */
-        #global-loader {
+        .btn-danger {
+            background: var(--danger);
+            color: var(--white);
+        }
+
+        .btn-warning {
+            background: var(--warning);
+            color: var(--gray-800);
+        }
+
+        .btn-info {
+            background: var(--info);
+            color: var(--white);
+        }
+
+        .btn-sm:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* MODAL */
+        .modal {
+            display: none;
             position: fixed;
-            inset: 0;
-            background: var(--white);
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
         }
 
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 5px solid var(--gray-200);
-            border-top: 5px solid var(--primary);
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: modalSlide 0.3s ease-out;
+        }
+
+        @keyframes modalSlide {
+            from {
+                opacity: 0;
+                transform: scale(0.9) translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid var(--gray-200);
+        }
+
+        .modal-header h3 {
+            font-size: 1.5rem;
+            color: var(--gray-800);
+        }
+
+        .modal-close {
+            background: transparent;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--gray-500);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            color: var(--danger);
+        }
+
+        /* NOTIFICATIONS */
+        .notification {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            background: var(--white);
+            padding: 16px 24px;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-xl);
+            display: none;
+            align-items: center;
+            gap: 12px;
+            z-index: 2000;
+            min-width: 300px;
+            animation: slideInRight 0.3s ease-out;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .notification.active {
+            display: flex;
+        }
+
+        .notification.success {
+            border-left: 4px solid var(--success);
+        }
+
+        .notification.error {
+            border-left: 4px solid var(--danger);
+        }
+
+        .notification.info {
+            border-left: 4px solid var(--info);
+        }
+
+        .notification i {
+            font-size: 1.5rem;
+        }
+
+        .notification.success i {
+            color: var(--success);
+        }
+
+        .notification.error i {
+            color: var(--danger);
+        }
+
+        .notification.info i {
+            color: var(--info);
+        }
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-content strong {
+            display: block;
+            margin-bottom: 4px;
+            color: var(--gray-800);
+        }
+
+        .notification-content p {
+            font-size: 0.9rem;
+            color: var(--gray-600);
+        }
+
+        /* LOADING */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
             border-radius: 50%;
-            animation: spin 1s linear infinite;
+            border-top-color: var(--white);
+            animation: spin 0.8s linear infinite;
         }
 
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
 
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 3000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .loading-overlay.active {
+            display: flex;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 6px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            border-top-color: var(--white);
+            animation: spin 1s linear infinite;
+        }
+
         /* RESPONSIVE */
-        @media (max-width: 1024px) {
-            .dashboard-grid { grid-template-columns: 1fr; }
-            .section-grid { grid-template-columns: 1fr; }
-            .sidebar { transform: translateX(-100%); transition: transform 0.3s ease; }
-            .sidebar.mobile-open { transform: translateX(0); }
-            .main-content { margin-left: 0; padding: 20px; }
+        @media (max-width: 768px) {
+            .auth-box {
+                padding: 32px 24px;
+            }
+
+            .dashboard-header-content {
+                flex-direction: column;
+                gap: 16px;
+                text-align: center;
+            }
+
+            .dashboard-user {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .dashboard-nav-content {
+                overflow-x: auto;
+                padding-bottom: 8px;
+            }
+
+            .nav-tab {
+                white-space: nowrap;
+            }
+
+            .balance-amount {
+                font-size: 2rem;
+            }
+
+            .stat-value {
+                font-size: 1.5rem;
+            }
+
+            .transaction-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .transaction-amount {
+                text-align: left;
+            }
+
+            .admin-actions {
+                flex-direction: column;
+            }
+
+            table {
+                font-size: 0.85rem;
+            }
+
+            th, td {
+                padding: 12px 8px;
+            }
+
+            .modal-content {
+                padding: 24px 16px;
+            }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 48px 24px;
+            color: var(--gray-500);
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            font-size: 1.3rem;
+            margin-bottom: 8px;
+            color: var(--gray-600);
+        }
+
+        .empty-state p {
+            font-size: 0.95rem;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .filter-group select,
+        .filter-group input {
+            padding: 10px 14px;
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .filter-group select:focus,
+        .filter-group input:focus {
+            outline: none;
+            border-color: var(--primary-red);
+        }
+
+        .badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge.admin {
+            background: #9c27b0;
+            color: var(--white);
+        }
+
+        .badge.user {
+            background: #2196f3;
+            color: var(--white);
+        }
+
+        .card-virtual {
+            background: linear-gradient(135deg, #1e1e1e 0%, #3c3c3c 100%);
+            color: var(--white);
+            padding: 32px;
+            border-radius: var(--radius-lg);
+            position: relative;
+            overflow: hidden;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card-virtual::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 300px;
+            height: 300px;
+            background: rgba(220, 0, 50, 0.2);
+            border-radius: 50%;
+        }
+
+        .card-chip {
+            width: 50px;
+            height: 40px;
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+            border-radius: 8px;
+            margin-bottom: 24px;
+        }
+
+        .card-number {
+            font-size: 1.5rem;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 4px;
+            margin-bottom: 20px;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .card-holder p {
+            font-size: 0.75rem;
+            opacity: 0.7;
+            margin-bottom: 4px;
+        }
+
+        .card-holder strong {
+            font-size: 1rem;
+        }
+
+        .card-brand {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-red);
         }
     </style>
 </head>
 <body>
-
-    <div id="global-loader" class="center">
-        <div class="spinner"></div>
-        <p style="font-weight: 700; color: var(--primary)">Marcos Bank</p>
-    </div>
-
-    <div id="auth-container">
-        <div id="login-card" class="auth-card animate-fade">
-            <div class="auth-logo">
-                <i class="fas fa-university"></i>
-                <h1>Marcos<span>Bank</span></h1>
-            </div>
-            <form id="login-form">
-                <div class="form-group">
-                    <label>E-mail</label>
-                    <input type="email" class="form-control" id="login-email" placeholder="nome@exemplo.com" required>
+    <div class="app-container">
+        <!-- AUTH WRAPPER -->
+        <div id="authWrapper" class="auth-wrapper">
+            <div class="auth-box">
+                <div class="auth-logo">
+                    <h1><i class="fas fa-university"></i> Marcos Bank</h1>
+                    <p>Seu banco digital de confiança</p>
                 </div>
-                <div class="form-group">
-                    <label>Senha</label>
-                    <input type="password" class="form-control" id="login-password" placeholder="••••••••" required>
+
+                <div class="auth-tabs">
+                    <button class="auth-tab active" onclick="switchAuthTab('login')">Login</button>
+                    <button class="auth-tab" onclick="switchAuthTab('register')">Criar Conta</button>
                 </div>
-                <button type="submit" class="btn-primary">Entrar na Conta</button>
-            </form>
-            <div class="auth-footer">
-                Não tem uma conta? <a href="#" id="go-to-register">Cadastre-se</a>
+
+                <!-- LOGIN FORM -->
+                <form id="loginForm" class="auth-form">
+                    <div class="form-group">
+                        <label for="loginEmail">Email</label>
+                        <input type="email" id="loginEmail" class="form-input" placeholder="seu@email.com" required>
+                        <span class="error-message" id="loginEmailError">Email inválido</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="loginPassword">Senha</label>
+                        <input type="password" id="loginPassword" class="form-input" placeholder="••••••••" required>
+                        <span class="error-message" id="loginPasswordError">Senha inválida</span>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        <span id="loginBtnText">Entrar</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </form>
+
+                <!-- REGISTER FORM -->
+                <form id="registerForm" class="auth-form" style="display: none;">
+                    <div class="form-group">
+                        <label for="registerName">Nome Completo</label>
+                        <input type="text" id="registerName" class="form-input" placeholder="João Silva" required>
+                        <span class="error-message" id="registerNameError">Nome muito curto</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="registerEmail">Email</label>
+                        <input type="email" id="registerEmail" class="form-input" placeholder="seu@email.com" required>
+                        <span class="error-message" id="registerEmailError">Email inválido</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="registerPassword">Senha</label>
+                        <input type="password" id="registerPassword" class="form-input" placeholder="Mínimo 6 caracteres" required>
+                        <span class="error-message" id="registerPasswordError">Senha muito curta</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="registerConfirmPassword">Confirmar Senha</label>
+                        <input type="password" id="registerConfirmPassword" class="form-input" placeholder="Digite a senha novamente" required>
+                        <span class="error-message" id="registerConfirmPasswordError">Senhas não coincidem</span>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        <span id="registerBtnText">Criar Conta</span>
+                        <i class="fas fa-user-plus"></i>
+                    </button>
+                </form>
             </div>
         </div>
 
-        <div id="register-card" class="auth-card animate-fade hidden">
-            <div class="auth-logo">
-                <i class="fas fa-university"></i>
-                <h1>Marcos<span>Bank</span></h1>
-            </div>
-            <form id="register-form">
-                <div class="form-group">
-                    <label>Nome Completo</label>
-                    <input type="text" class="form-control" id="reg-name" placeholder="Marcos Silva" required>
-                </div>
-                <div class="form-group">
-                    <label>E-mail</label>
-                    <input type="email" class="form-control" id="reg-email" placeholder="nome@exemplo.com" required>
-                </div>
-                <div class="form-group">
-                    <label>Senha</label>
-                    <input type="password" class="form-control" id="reg-password" placeholder="Mínimo 6 caracteres" required minlength="6">
-                </div>
-                <div class="form-group">
-                    <label>Confirmar Senha</label>
-                    <input type="password" class="form-control" id="reg-confirm" placeholder="••••••••" required>
-                </div>
-                <button type="submit" class="btn-primary">Criar Conta Premium</button>
-            </form>
-            <div class="auth-footer">
-                Já possui conta? <a href="#" id="go-to-login">Fazer Login</a>
-            </div>
-        </div>
-    </div>
-
-    <div id="app-container" class="hidden">
-        <aside class="sidebar" id="app-sidebar">
-            <div class="sidebar-logo">
-                <i class="fas fa-university"></i>
-                <h2>Marcos<span>Bank</span></h2>
-            </div>
-            <ul class="nav-menu">
-                <li class="nav-item">
-                    <a href="#" class="nav-link active" data-view="dashboard">
-                        <i class="fas fa-th-large"></i> Dashboard
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link" data-view="pix">
-                        <i class="fas fa-bolt"></i> Área Pix
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link" data-view="poupanca">
-                        <i class="fas fa-piggy-bank"></i> Poupança
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link" data-view="extrato">
-                        <i class="fas fa-list-ul"></i> Extrato
-                    </a>
-                </li>
-                <li class="nav-item" id="admin-nav-item" class="hidden">
-                    <a href="#" class="nav-link" data-view="admin">
-                        <i class="fas fa-user-shield"></i> Admin Panel
-                    </a>
-                </li>
-            </ul>
-            <div class="user-profile-mini">
-                <div class="avatar" id="user-initials">M</div>
-                <div class="profile-info">
-                    <h4 id="user-display-name">Carregando...</h4>
-                    <p id="user-display-email">email@test.com</p>
-                </div>
-                <button id="btn-logout" style="background: none; color: var(--danger); font-size: 1.2rem; margin-left: auto;">
-                    <i class="fas fa-sign-out-alt"></i>
-                </button>
-            </div>
-        </aside>
-
-        <main class="main-content">
-            <header>
-                <div class="header-title">
-                    <h1 id="view-title">Dashboard</h1>
-                    <p id="view-subtitle">Bem-vindo de volta, Marcos!</p>
-                </div>
-                <div class="header-actions">
-                    <div class="btn-icon"><i class="fas fa-bell"></i></div>
-                    <div class="btn-icon"><i class="fas fa-cog"></i></div>
+        <!-- DASHBOARD -->
+        <div id="dashboard" class="dashboard">
+            <header class="dashboard-header">
+                <div class="dashboard-header-content">
+                    <div class="dashboard-brand">
+                        <i class="fas fa-university"></i>
+                        <h1>Marcos Bank</h1>
+                    </div>
+                    <div class="dashboard-user">
+                        <div class="user-info">
+                            <p>Bem-vindo(a),</p>
+                            <strong id="userName">Usuário</strong>
+                        </div>
+                        <button class="btn-logout" onclick="logout()">
+                            <i class="fas fa-sign-out-alt"></i> Sair
+                        </button>
+                    </div>
                 </div>
             </header>
 
-            <div id="view-container">
-                
-                <div id="view-dashboard" class="animate-fade">
-                    <div class="dashboard-grid">
-                        <div class="card card-balance">
-                            <span class="card-label">Saldo em Conta</span>
-                            <h2 class="card-value" id="dash-balance">R$ 0,00</h2>
-                            <div class="card-footer">
-                                <span class="pix-key-badge" id="dash-pix-key">Chave: ...</span>
-                                <i class="fas fa-eye" style="cursor: pointer;"></i>
-                            </div>
-                        </div>
-                        <div class="card card-poupanca">
-                            <span class="card-label" style="color: var(--gray-600)">Reserva Poupança</span>
-                            <h2 class="card-value" id="dash-poupanca">R$ 0,00</h2>
-                            <div class="card-footer">
-                                <span style="color: var(--success); font-weight: 700; font-size: 0.8rem;">
-                                    <i class="fas fa-chart-line"></i> Rendendo 0.1%/seg
-                                </span>
-                            </div>
-                        </div>
-                        <div class="card stat-card">
-                            <div class="stat-icon"><i class="fas fa-exchange-alt"></i></div>
-                            <div class="stat-info">
-                                <h3 id="dash-trans-count">0</h3>
-                                <p>Transações este mês</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="section-grid">
-                        <div class="transactions-list">
-                            <div class="section-header">
-                                <h2>Últimas Transações</h2>
-                                <button class="btn-sm" style="color: var(--primary); font-weight: 700;">Ver Tudo</button>
-                            </div>
-                            <div id="recent-transactions-list">
-                                </div>
-                        </div>
-                        <div class="card">
-                            <div class="section-header">
-                                <h2>Análise Mensal</h2>
-                            </div>
-                            <canvas id="balanceChart" height="250"></canvas>
-                        </div>
-                    </div>
+            <nav class="dashboard-nav">
+                <div class="dashboard-nav-content">
+                    <button class="nav-tab active" onclick="switchSection('home')">
+                        <i class="fas fa-home"></i> Início
+                    </button>
+                    <button class="nav-tab" onclick="switchSection('pix')">
+                        <i class="fas fa-exchange-alt"></i> PIX
+                    </button>
+                    <button class="nav-tab" onclick="switchSection('savings')">
+                        <i class="fas fa-piggy-bank"></i> Poupança
+                    </button>
+                    <button class="nav-tab" onclick="switchSection('extract')">
+                        <i class="fas fa-file-invoice"></i> Extrato
+                    </button>
+                    <button class="nav-tab" onclick="switchSection('card')">
+                        <i class="fas fa-credit-card"></i> Cartão
+                    </button>
+                    <button class="nav-tab" id="adminTab" style="display: none;" onclick="switchSection('admin')">
+                        <i class="fas fa-shield-alt"></i> Admin
+                    </button>
                 </div>
+            </nav>
 
-                <div id="view-pix" class="animate-fade hidden">
-                    <div class="section-grid" style="grid-template-columns: 1fr 1fr;">
-                        <div class="card">
-                            <div class="section-header">
-                                <h2>Enviar PIX</h2>
+            <main class="dashboard-content">
+                <!-- HOME SECTION -->
+                <section id="homeSection" class="section active">
+                    <div class="balance-grid">
+                        <div class="balance-card">
+                            <div class="balance-card-header">
+                                <i class="fas fa-wallet"></i>
+                                <span>Conta Corrente</span>
                             </div>
-                            <p class="modal-desc">Transfira instantaneamente para qualquer chave cadastrada.</p>
-                            <form id="pix-form">
-                                <div class="form-group">
-                                    <label>Chave PIX do Destinatário</label>
-                                    <input type="text" class="form-control" id="pix-key-dest" placeholder="Digite a chave" required>
-                                </div>
-                                <div class="form-group">
-                                    <label>Valor (R$)</label>
-                                    <input type="number" step="0.01" class="form-control" id="pix-value" placeholder="0,00" required>
-                                </div>
-                                <div class="form-group">
-                                    <label>Descrição (Opcional)</label>
-                                    <input type="text" class="form-control" id="pix-desc" placeholder="Ex: Almoço">
-                                </div>
-                                <button type="submit" class="btn-primary">Confirmar Envio</button>
-                            </form>
+                            <div class="balance-amount" id="balanceDisplay">R$ 0,00</div>
+                            <div class="balance-info">Saldo disponível</div>
                         </div>
-                        <div class="card">
-                            <div class="section-header">
-                                <h2>Minha Chave PIX</h2>
+
+                        <div class="balance-card secondary">
+                            <div class="balance-card-header">
+                                <i class="fas fa-piggy-bank"></i>
+                                <span>Poupança</span>
                             </div>
-                            <div style="text-align: center; padding: 20px;">
-                                <div style="background: var(--gray-100); padding: 20px; border-radius: 16px; margin-bottom: 20px;">
-                                    <p style="font-size: 0.8rem; color: var(--gray-600); margin-bottom: 5px;">Sua chave aleatória:</p>
-                                    <h3 id="my-pix-key-display" style="font-weight: 800; color: var(--primary);">---</h3>
-                                </div>
-                                <button class="btn-sm" style="background: var(--gray-200); width: 100%; padding: 12px; margin-bottom: 10px;">Copiar Chave</button>
-                                <button class="btn-sm" style="background: var(--black); color: white; width: 100%; padding: 12px;">Gerar Nova Chave</button>
+                            <div class="balance-amount" id="savingsDisplay">R$ 0,00</div>
+                            <div class="balance-info">Rendimento automático ativo</div>
+                        </div>
+
+                        <div class="balance-card tertiary">
+                            <div class="balance-card-header">
+                                <i class="fas fa-chart-line"></i>
+                                <span>Total Patrimônio</span>
                             </div>
+                            <div class="balance-amount" id="totalDisplay">R$ 0,00</div>
+                            <div class="balance-info">Soma de todas as contas</div>
                         </div>
                     </div>
-                </div>
 
-                <div id="view-poupanca" class="animate-fade hidden">
-                    <div class="dashboard-grid">
-                        <div class="card">
-                            <span class="card-label">Saldo Guardado</span>
-                            <h2 class="card-value" id="poup-balance-main">R$ 0,00</h2>
-                            <p style="color: var(--success); font-size: 0.85rem; font-weight: 700;">
-                                <i class="fas fa-arrow-up"></i> Rendendo agora
-                            </p>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-label">Transações no Mês</div>
+                            <div class="stat-value" id="monthTransactions">0</div>
                         </div>
-                        <div class="card">
-                            <div class="section-header"><h2>Guardar</h2></div>
-                            <div class="flex center gap-10">
-                                <input type="number" id="poup-save-amount" class="form-control" placeholder="Valor">
-                                <button id="btn-save-poup" class="btn-primary" style="margin: 0; width: auto; padding: 12px 25px;">OK</button>
-                            </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Total Movimentado</div>
+                            <div class="stat-value" id="totalMoved">R$ 0</div>
                         </div>
-                        <div class="card">
-                            <div class="section-header"><h2>Resgatar</h2></div>
-                            <div class="flex center gap-10">
-                                <input type="number" id="poup-get-amount" class="form-control" placeholder="Valor">
-                                <button id="btn-get-poup" class="btn-primary" style="margin: 0; width: auto; padding: 12px 25px; background: var(--black);">OK</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="section-header">
-                            <h2>Histórico de Rendimentos</h2>
-                        </div>
-                        <div id="rendimentos-list">
-                            </div>
-                    </div>
-                </div>
-
-                <div id="view-admin" class="animate-fade hidden">
-                    <div class="dashboard-grid">
-                        <div class="card stat-card">
-                            <div class="stat-icon" style="background: #e0f2fe; color: #0369a1;"><i class="fas fa-users"></i></div>
-                            <div class="stat-info">
-                                <h3 id="admin-total-users">0</h3>
-                                <p>Usuários Totais</p>
-                            </div>
-                        </div>
-                        <div class="card stat-card">
-                            <div class="stat-icon" style="background: #fef3c7; color: #b45309;"><i class="fas fa-coins"></i></div>
-                            <div class="stat-info">
-                                <h3 id="admin-total-money">R$ 0</h3>
-                                <p>Volume Global</p>
-                            </div>
-                        </div>
-                        <div class="card stat-card">
-                            <div class="stat-icon" style="background: #dcfce7; color: #15803d;"><i class="fas fa-chart-bar"></i></div>
-                            <div class="stat-info">
-                                <h3 id="admin-total-trans">0</h3>
-                                <p>Transações Totais</p>
-                            </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Chave PIX</div>
+                            <div class="stat-value" style="font-size: 1rem;" id="pixKeyDisplay">-</div>
                         </div>
                     </div>
 
                     <div class="card">
-                        <div class="section-header">
-                            <h2>Gestão de Usuários</h2>
-                            <div class="flex gap-10">
-                                <input type="text" id="admin-search" class="form-control" style="padding: 8px 15px; font-size: 0.8rem;" placeholder="Buscar email ou chave...">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-history"></i>
+                                Últimas Transações
+                            </h3>
+                        </div>
+                        <div id="recentTransactions" class="transactions-list">
+                            <div class="empty-state">
+                                <i class="fas fa-inbox"></i>
+                                <h3>Nenhuma transação ainda</h3>
+                                <p>Suas transações aparecerão aqui</p>
                             </div>
                         </div>
-                        <div class="admin-table-container">
-                            <table class="admin-table">
+                    </div>
+                </section>
+
+                <!-- PIX SECTION -->
+                <section id="pixSection" class="section">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-exchange-alt"></i>
+                                Transferência PIX
+                            </h3>
+                        </div>
+
+                        <div class="pix-key-display">
+                            <div>
+                                <strong>Sua Chave PIX:</strong>
+                                <code id="userPixKey">-</code>
+                            </div>
+                            <button class="btn-copy" onclick="copyPixKey()">
+                                <i class="fas fa-copy"></i> Copiar
+                            </button>
+                        </div>
+
+                        <form id="pixForm" class="pix-form">
+                            <div class="form-group">
+                                <label>Chave PIX do Destinatário</label>
+                                <div class="input-with-icon">
+                                    <i class="fas fa-key"></i>
+                                    <input type="text" id="pixDestination" class="form-input" placeholder="Digite a chave PIX" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Valor</label>
+                                <div class="input-with-icon">
+                                    <i class="fas fa-dollar-sign"></i>
+                                    <input type="number" id="pixAmount" class="form-input" placeholder="0,00" step="0.01" min="0.01" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Descrição (opcional)</label>
+                                <div class="input-with-icon">
+                                    <i class="fas fa-comment"></i>
+                                    <input type="text" id="pixDescription" class="form-input" placeholder="Ex: Pagamento de aluguel">
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-paper-plane"></i>
+                                Enviar PIX
+                            </button>
+                        </form>
+                    </div>
+                </section>
+
+                <!-- SAVINGS SECTION -->
+                <section id="savingsSection" class="section">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-piggy-bank"></i>
+                                Poupança Marcos Bank
+                            </h3>
+                        </div>
+
+                        <div class="earnings-display">
+                            <h3>Rendimento Total Acumulado</h3>
+                            <div class="amount" id="totalEarnings">R$ 0,00</div>
+                            <p>Rendimento automático de R$ 0,01 a cada 3 segundos</p>
+                        </div>
+
+                        <div class="savings-actions">
+                            <div class="savings-action-card">
+                                <h3>Depositar na Poupança</h3>
+                                <div class="form-group">
+                                    <input type="number" id="depositAmount" class="form-input" placeholder="Valor" step="0.01" min="0.01">
+                                </div>
+                                <button class="btn btn-primary" onclick="depositToSavings()">
+                                    <i class="fas fa-arrow-down"></i>
+                                    Depositar
+                                </button>
+                            </div>
+
+                            <div class="savings-action-card">
+                                <h3>Resgatar da Poupança</h3>
+                                <div class="form-group">
+                                    <input type="number" id="withdrawAmount" class="form-input" placeholder="Valor" step="0.01" min="0.01">
+                                </div>
+                                <button class="btn btn-primary" onclick="withdrawFromSavings()">
+                                    <i class="fas fa-arrow-up"></i>
+                                    Resgatar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-chart-line"></i>
+                                Histórico de Rendimentos
+                            </h3>
+                        </div>
+                        <div id="earningsHistory" class="transactions-list">
+                            <div class="empty-state">
+                                <i class="fas fa-chart-area"></i>
+                                <h3>Nenhum rendimento ainda</h3>
+                                <p>Transfira dinheiro para a poupança e comece a render</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- EXTRACT SECTION -->
+                <section id="extractSection" class="section">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-file-invoice"></i>
+                                Extrato Completo
+                            </h3>
+                        </div>
+
+                        <div class="filter-group">
+                            <select id="filterType" onchange="filterTransactions()">
+                                <option value="all">Todos os tipos</option>
+                                <option value="pix">PIX</option>
+                                <option value="deposito">Depósito</option>
+                                <option value="saque">Saque</option>
+                                <option value="poupanca">Poupança</option>
+                            </select>
+
+                            <input type="date" id="filterDateStart" onchange="filterTransactions()">
+                            <input type="date" id="filterDateEnd" onchange="filterTransactions()">
+
+                            <button class="btn-sm btn-info" onclick="clearFilters()">
+                                <i class="fas fa-times"></i> Limpar Filtros
+                            </button>
+                        </div>
+
+                        <div id="allTransactions" class="transactions-list">
+                            <div class="empty-state">
+                                <i class="fas fa-inbox"></i>
+                                <h3>Nenhuma transação encontrada</h3>
+                                <p>Realize operações para ver o histórico</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- CARD SECTION -->
+                <section id="cardSection" class="section">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-credit-card"></i>
+                                Cartão Virtual
+                            </h3>
+                        </div>
+
+                        <div class="card-virtual">
+                            <div class="card-chip"></div>
+                            <div class="card-number" id="cardNumber">•••• •••• •••• ••••</div>
+                            <div class="card-footer">
+                                <div class="card-holder">
+                                    <p>TITULAR</p>
+                                    <strong id="cardHolder">NOME DO USUÁRIO</strong>
+                                </div>
+                                <div class="card-brand">MB</div>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 24px;">
+                            <div class="stat-card">
+                                <div class="stat-label">ID da Conta</div>
+                                <div class="stat-value" style="font-size: 1.2rem;" id="accountId">-</div>
+                            </div>
+
+                            <div class="stat-card" style="margin-top: 16px;">
+                                <div class="stat-label">Conta Criada em</div>
+                                <div class="stat-value" style="font-size: 1.2rem;" id="accountCreated">-</div>
+                            </div>
+
+                            <div class="stat-card" style="margin-top: 16px;">
+                                <div class="stat-label">Status da Conta</div>
+                                <div class="stat-value" style="font-size: 1.2rem;" id="accountStatus">-</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ADMIN SECTION -->
+                <section id="adminSection" class="section">
+                    <div class="admin-header">
+                        <h2><i class="fas fa-shield-alt"></i> Painel Administrativo</h2>
+                        <p>Gerenciamento completo do Marcos Bank</p>
+                    </div>
+
+                    <div class="admin-stats">
+                        <div class="admin-stat-card">
+                            <div class="icon"><i class="fas fa-users"></i></div>
+                            <div class="value" id="totalUsers">0</div>
+                            <div class="label">Total de Usuários</div>
+                        </div>
+
+                        <div class="admin-stat-card">
+                            <div class="icon"><i class="fas fa-dollar-sign"></i></div>
+                            <div class="value" id="totalMoney">R$ 0</div>
+                            <div class="label">Total em Circulação</div>
+                        </div>
+
+                        <div class="admin-stat-card">
+                            <div class="icon"><i class="fas fa-exchange-alt"></i></div>
+                            <div class="value" id="totalTransactions">0</div>
+                            <div class="label">Total de Transações</div>
+                        </div>
+
+                        <div class="admin-stat-card">
+                            <div class="icon"><i class="fas fa-chart-line"></i></div>
+                            <div class="value" id="totalVolume">R$ 0</div>
+                            <div class="label">Volume Total</div>
+                        </div>
+                    </div>
+
+                    <div class="admin-search">
+                        <h3 style="margin-bottom: 16px;">Buscar Usuário</h3>
+                        <div class="search-grid">
+                            <input type="text" id="adminSearchEmail" class="form-input" placeholder="Buscar por email ou chave PIX">
+                            <button class="btn btn-primary" onclick="searchUser()">
+                                <i class="fas fa-search"></i> Buscar
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-users"></i>
+                                Todos os Usuários
+                            </h3>
+                        </div>
+                        <div class="users-table">
+                            <table>
                                 <thead>
                                     <tr>
                                         <th>Nome</th>
                                         <th>Email</th>
                                         <th>Saldo</th>
-                                        <th>Chave PIX</th>
+                                        <th>Poupança</th>
                                         <th>Status</th>
+                                        <th>Role</th>
                                         <th>Ações</th>
                                     </tr>
                                 </thead>
-                                <tbody id="admin-users-table">
-                                    </tbody>
+                                <tbody id="usersTableBody">
+                                    <tr>
+                                        <td colspan="7" style="text-align: center; padding: 32px;">
+                                            Carregando usuários...
+                                        </td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </div>
                     </div>
-                </div>
-
-            </div>
-        </main>
-    </div>
-
-    <div class="modal-overlay" id="generic-modal">
-        <div class="modal">
-            <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
-            <div id="modal-content">
-                </div>
+                </section>
+            </main>
         </div>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { 
-            getAuth, 
-            createUserWithEmailAndPassword, 
-            signInWithEmailAndPassword, 
-            onAuthStateChanged, 
-            signOut 
-        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { 
-            getFirestore, 
-            doc, 
-            setDoc, 
-            getDoc, 
-            collection, 
-            query, 
-            where, 
-            onSnapshot, 
-            addDoc, 
-            orderBy, 
-            limit, 
-            updateDoc, 
-            increment,
-            getDocs,
-            runTransaction
-        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    <!-- NOTIFICATION -->
+    <div id="notification" class="notification">
+        <i class="fas fa-check-circle"></i>
+        <div class="notification-content">
+            <strong id="notificationTitle">Sucesso!</strong>
+            <p id="notificationMessage">Operação realizada com sucesso</p>
+        </div>
+    </div>
 
-        // CONFIGURAÇÃO
+    <!-- LOADING OVERLAY -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- ADMIN MODALS -->
+    <div id="adminModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Ação Administrativa</h3>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div id="modalBody">
+                <div class="form-group">
+                    <label id="modalLabel">Valor</label>
+                    <input type="number" id="modalInput" class="form-input" step="0.01">
+                </div>
+                <button class="btn btn-primary" onclick="executeAdminAction()">
+                    <i class="fas fa-check"></i> Confirmar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FIREBASE SDK -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        import { getFirestore, collection, doc, setDoc, getDoc, getDocs, updateDoc, query, where, orderBy, limit, onSnapshot, serverTimestamp, increment } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
         const firebaseConfig = {
             apiKey: "AIzaSyBAB-JtIEMuW2--N4lL3rZX9bwMFy962s4",
             authDomain: "bank-f34a8.firebaseapp.com",
@@ -932,455 +1697,1012 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // ESTADO GLOBAL
+        window.db = db;
+        window.auth = auth;
+
+        let currentUser = null;
         let currentUserData = null;
-        let activeView = 'dashboard';
-        let rendimentoInterval = null;
+        let savingsInterval = null;
+        let adminModalAction = null;
+        let adminModalTargetUid = null;
+        let allTransactionsData = [];
 
-        // --- CORE FUNCTIONS ---
+        // AUTH STATE OBSERVER
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUser = user;
+                await loadUserData();
+                showDashboard();
+                startSavingsEarnings();
+                loadTransactions();
+                loadEarnings();
+                
+                if (currentUserData && currentUserData.role === 'admin') {
+                    document.getElementById('adminTab').style.display = 'block';
+                    loadAdminData();
+                }
+            } else {
+                currentUser = null;
+                currentUserData = null;
+                showAuth();
+                stopSavingsEarnings();
+            }
+        });
 
-        const showLoader = (show) => {
-            document.getElementById('global-loader').style.display = show ? 'flex' : 'none';
-        };
-
-        const formatCurrency = (val) => {
-            return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(val || 0);
-        };
-
-        const generatePixKey = () => {
-            return Math.random().toString(36).substring(2, 10) + Math.random().toString(36).substring(2, 10);
-        };
-
-        // --- AUTH LOGIC ---
-
-        const handleRegister = async (e) => {
-            e.preventDefault();
-            const name = document.getElementById('reg-name').value;
-            const email = document.getElementById('reg-email').value;
-            const pass = document.getElementById('reg-password').value;
-            const confirm = document.getElementById('reg-confirm').value;
-
-            if (pass !== confirm) return alert("As senhas não coincidem!");
-
-            showLoader(true);
+        // LOAD USER DATA
+        async function loadUserData() {
             try {
-                const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
-                const user = userCredential.user;
+                const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
+                if (userDoc.exists()) {
+                    currentUserData = userDoc.data();
+                    updateDashboardUI();
+                } else {
+                    await logout();
+                }
+            } catch (error) {
+                console.error('Erro ao carregar dados:', error);
+                showNotification('Erro ao carregar dados do usuário', 'error');
+            }
+        }
 
-                // Create User Doc
-                await setDoc(doc(db, "users", user.uid), {
+        // UPDATE DASHBOARD UI
+        function updateDashboardUI() {
+            if (!currentUserData) return;
+
+            document.getElementById('userName').textContent = currentUserData.nome;
+            document.getElementById('balanceDisplay').textContent = formatCurrency(currentUserData.saldo);
+            document.getElementById('savingsDisplay').textContent = formatCurrency(currentUserData.saldoPoupanca);
+            document.getElementById('totalDisplay').textContent = formatCurrency(currentUserData.saldo + currentUserData.saldoPoupanca);
+            document.getElementById('pixKeyDisplay').textContent = currentUserData.chavePix;
+            document.getElementById('userPixKey').textContent = currentUserData.chavePix;
+            
+            // Card section
+            document.getElementById('cardHolder').textContent = currentUserData.nome.toUpperCase();
+            document.getElementById('accountId').textContent = currentUser.uid.substring(0, 16);
+            
+            if (currentUserData.createdAt && currentUserData.createdAt.toDate) {
+                const date = currentUserData.createdAt.toDate();
+                document.getElementById('accountCreated').textContent = date.toLocaleDateString('pt-BR');
+            }
+            
+            const statusEl = document.getElementById('accountStatus');
+            statusEl.textContent = currentUserData.status === 'ativa' ? 'Ativa' : 'Congelada';
+            statusEl.style.color = currentUserData.status === 'ativa' ? 'var(--success)' : 'var(--danger)';
+            
+            // Generate card number (fake)
+            const cardNum = `${Math.floor(Math.random() * 10000).toString().padStart(4, '0')} ${Math.floor(Math.random() * 10000).toString().padStart(4, '0')} ${Math.floor(Math.random() * 10000).toString().padStart(4, '0')} ${Math.floor(Math.random() * 10000).toString().padStart(4, '0')}`;
+            document.getElementById('cardNumber').textContent = cardNum;
+        }
+
+        // REAL-TIME USER DATA UPDATES
+        function setupRealtimeUserData() {
+            if (!currentUser) return;
+            
+            onSnapshot(doc(db, 'users', currentUser.uid), (doc) => {
+                if (doc.exists()) {
+                    currentUserData = doc.data();
+                    updateDashboardUI();
+                }
+            });
+        }
+
+        // AUTH FUNCTIONS
+        window.switchAuthTab = function(tab) {
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            const tabs = document.querySelectorAll('.auth-tab');
+            
+            tabs.forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            if (tab === 'login') {
+                loginForm.style.display = 'block';
+                registerForm.style.display = 'none';
+            } else {
+                loginForm.style.display = 'none';
+                registerForm.style.display = 'block';
+            }
+        };
+
+        // LOGIN
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            
+            if (!email || !password) {
+                showNotification('Preencha todos os campos', 'error');
+                return;
+            }
+            
+            showLoading(true);
+            
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                showNotification('Login realizado com sucesso!', 'success');
+            } catch (error) {
+                console.error('Erro no login:', error);
+                let message = 'Erro ao fazer login';
+                
+                if (error.code === 'auth/user-not-found') {
+                    message = 'Usuário não encontrado';
+                } else if (error.code === 'auth/wrong-password') {
+                    message = 'Senha incorreta';
+                } else if (error.code === 'auth/invalid-email') {
+                    message = 'Email inválido';
+                }
+                
+                showNotification(message, 'error');
+            } finally {
+                showLoading(false);
+            }
+        });
+
+        // REGISTER
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const name = document.getElementById('registerName').value.trim();
+            const email = document.getElementById('registerEmail').value.trim();
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('registerConfirmPassword').value;
+            
+            // Validations
+            if (!name || name.length < 3) {
+                showNotification('Nome deve ter pelo menos 3 caracteres', 'error');
+                return;
+            }
+            
+            if (!email || !email.includes('@')) {
+                showNotification('Email inválido', 'error');
+                return;
+            }
+            
+            if (!password || password.length < 6) {
+                showNotification('Senha deve ter pelo menos 6 caracteres', 'error');
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                showNotification('As senhas não coincidem', 'error');
+                return;
+            }
+            
+            showLoading(true);
+            
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+                
+                // Generate unique PIX key
+                const pixKey = generatePixKey();
+                
+                // Create user document
+                await setDoc(doc(db, 'users', user.uid), {
                     uid: user.uid,
                     nome: name,
                     email: email,
-                    saldo: 100.00, // Welcome gift
-                    saldoPoupanca: 0.00,
-                    chavePix: generatePixKey(),
-                    status: "ativa",
-                    role: "user",
-                    createdAt: new Date()
+                    saldo: 1000, // Initial balance for testing
+                    saldoPoupanca: 0,
+                    chavePix: pixKey,
+                    status: 'ativa',
+                    role: 'user',
+                    createdAt: serverTimestamp()
                 });
-
-                // First Transaction
-                await addDoc(collection(db, "transacoes"), {
-                    tipo: "deposito",
-                    de: "SISTEMA",
-                    para: user.uid,
-                    valor: 100.00,
-                    data: new Date(),
-                    descricao: "Bônus de Boas-vindas Marcos Bank",
-                    status: "completado"
-                });
-
-                location.reload();
+                
+                showNotification('Conta criada com sucesso!', 'success');
             } catch (error) {
-                alert("Erro ao cadastrar: " + error.message);
-                showLoader(false);
+                console.error('Erro no registro:', error);
+                let message = 'Erro ao criar conta';
+                
+                if (error.code === 'auth/email-already-in-use') {
+                    message = 'Este email já está cadastrado';
+                } else if (error.code === 'auth/invalid-email') {
+                    message = 'Email inválido';
+                } else if (error.code === 'auth/weak-password') {
+                    message = 'Senha muito fraca';
+                }
+                
+                showNotification(message, 'error');
+            } finally {
+                showLoading(false);
             }
-        };
+        });
 
-        const handleLogin = async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('login-email').value;
-            const pass = document.getElementById('login-password').value;
-
-            showLoader(true);
+        // LOGOUT
+        window.logout = async function() {
             try {
-                await signInWithEmailAndPassword(auth, email, pass);
+                await signOut(auth);
+                showNotification('Logout realizado com sucesso', 'success');
             } catch (error) {
-                alert("Falha no login: " + error.message);
-                showLoader(false);
+                console.error('Erro no logout:', error);
+                showNotification('Erro ao fazer logout', 'error');
             }
         };
 
-        // --- DATABASE LISTENERS ---
-
-        const initUserListeners = (uid) => {
-            // User Data Listener
-            onSnapshot(doc(db, "users", uid), (doc) => {
-                if (doc.exists()) {
-                    currentUserData = doc.data();
-                    updateUI(currentUserData);
-                    if(currentUserData.status === 'congelada') {
-                        alert("Sua conta foi CONGELADA. Operações bloqueadas.");
-                    }
-                }
-            });
-
-            // Transactions Listener
-            const q = query(
-                collection(db, "transacoes"), 
-                where("para", "==", uid),
-                orderBy("data", "desc"),
-                limit(10)
-            );
-            const q2 = query(
-                collection(db, "transacoes"), 
-                where("de", "==", uid),
-                orderBy("data", "desc"),
-                limit(10)
-            );
-
-            // Simple merging logic for demo purposes
-            onSnapshot(q, (snapshot) => renderTransactions());
-            onSnapshot(q2, (snapshot) => renderTransactions());
-
-            // Start Savings Profit Simulation
-            startSavingsProfit(uid);
-        };
-
-        const renderTransactions = async () => {
-            if (!auth.currentUser) return;
-            const uid = auth.currentUser.uid;
-            
-            const q = query(collection(db, "transacoes"), orderBy("data", "desc"));
-            const snapshot = await getDocs(q);
-            const listContainer = document.getElementById('recent-transactions-list');
-            listContainer.innerHTML = '';
-
-            let count = 0;
-            snapshot.forEach(doc => {
-                const t = doc.data();
-                if ((t.de === uid || t.para === uid) && count < 6) {
-                    count++;
-                    const isIncome = t.para === uid;
-                    const amountClass = isIncome ? 'amount-positive' : 'amount-negative';
-                    const prefix = isIncome ? '+' : '-';
-                    
-                    const item = document.createElement('div');
-                    item.className = 'transaction-item animate-fade';
-                    item.innerHTML = `
-                        <div class="t-icon ${t.tipo}"><i class="fas ${getTransactionIcon(t.tipo)}"></i></div>
-                        <div class="t-info">
-                            <h4>${t.descricao}</h4>
-                            <p>${new Date(t.data.seconds * 1000).toLocaleDateString()}</p>
-                        </div>
-                        <div class="t-amount ${amountClass}">${prefix} ${formatCurrency(t.valor)}</div>
-                    `;
-                    listContainer.appendChild(item);
-                }
-            });
-            document.getElementById('dash-trans-count').innerText = count;
-        };
-
-        const getTransactionIcon = (tipo) => {
-            switch(tipo) {
-                case 'pix': return 'fa-bolt';
-                case 'deposito': return 'fa-arrow-down';
-                case 'saque': return 'fa-arrow-up';
-                case 'poupanca': return 'fa-piggy-bank';
-                default: return 'fa-exchange-alt';
+        // GENERATE PIX KEY
+        function generatePixKey() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let key = '';
+            for (let i = 0; i < 16; i++) {
+                key += chars.charAt(Math.floor(Math.random() * chars.length));
+                if ((i + 1) % 4 === 0 && i !== 15) key += '-';
             }
-        };
+            return key;
+        }
 
-        const startSavingsProfit = (uid) => {
-            if (rendimentoInterval) clearInterval(rendimentoInterval);
-            
-            rendimentoInterval = setInterval(async () => {
-                if (currentUserData && currentUserData.saldoPoupanca > 0 && currentUserData.status === 'ativa') {
-                    const profit = currentUserData.saldoPoupanca * 0.0001; // 0.01%
-                    
-                    try {
-                        const userRef = doc(db, "users", uid);
-                        await updateDoc(userRef, {
-                            saldoPoupanca: increment(profit)
-                        });
-
-                        await addDoc(collection(db, "rendimentos"), {
-                            userId: uid,
-                            valor: profit,
-                            data: new Date()
-                        });
-                    } catch (e) {
-                        console.error("Erro rendimento", e);
-                    }
-                }
-            }, 5000); // 5 sec for demo visibility
-        };
-
-        // --- PIX LOGIC ---
-
-        const handlePix = async (e) => {
+        // PIX TRANSFER
+        document.getElementById('pixForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const key = document.getElementById('pix-key-dest').value;
-            const val = parseFloat(document.getElementById('pix-value').value);
-            const desc = document.getElementById('pix-desc').value || "Transferência PIX";
-
-            if (currentUserData.status === 'congelada') return alert("Conta congelada!");
-            if (val <= 0) return alert("Valor inválido");
-            if (val > currentUserData.saldo) return alert("Saldo insuficiente");
-            if (key === currentUserData.chavePix) return alert("Não pode enviar para si mesmo!");
-
-            showLoader(true);
-
+            
+            if (!currentUser || !currentUserData) {
+                showNotification('Usuário não autenticado', 'error');
+                return;
+            }
+            
+            if (currentUserData.status === 'congelada') {
+                showNotification('Sua conta está congelada. Entre em contato com o suporte.', 'error');
+                return;
+            }
+            
+            const destinationKey = document.getElementById('pixDestination').value.trim();
+            const amount = parseFloat(document.getElementById('pixAmount').value);
+            const description = document.getElementById('pixDescription').value.trim() || 'Transferência PIX';
+            
+            if (!destinationKey) {
+                showNotification('Informe a chave PIX do destinatário', 'error');
+                return;
+            }
+            
+            if (!amount || amount <= 0) {
+                showNotification('Valor inválido', 'error');
+                return;
+            }
+            
+            if (amount > currentUserData.saldo) {
+                showNotification('Saldo insuficiente', 'error');
+                return;
+            }
+            
+            if (destinationKey === currentUserData.chavePix) {
+                showNotification('Você não pode transferir para si mesmo', 'error');
+                return;
+            }
+            
+            showLoading(true);
+            
             try {
-                // Find receiver
-                const q = query(collection(db, "users"), where("chavePix", "==", key));
-                const snap = await getDocs(q);
-
-                if (snap.empty) {
-                    alert("Chave PIX não encontrada!");
-                    showLoader(false);
+                // Find destination user
+                const usersQuery = query(collection(db, 'users'), where('chavePix', '==', destinationKey));
+                const usersSnapshot = await getDocs(usersQuery);
+                
+                if (usersSnapshot.empty) {
+                    showNotification('Chave PIX não encontrada', 'error');
+                    showLoading(false);
                     return;
                 }
-
-                const receiverDoc = snap.docs[0];
-                const receiverId = receiverDoc.id;
-
-                await runTransaction(db, async (transaction) => {
-                    const senderRef = doc(db, "users", currentUserData.uid);
-                    const receiverRef = doc(db, "users", receiverId);
-
-                    transaction.update(senderRef, { saldo: increment(-val) });
-                    transaction.update(receiverRef, { saldo: increment(val) });
-
-                    const tRef = doc(collection(db, "transacoes"));
-                    transaction.set(tRef, {
-                        tipo: "pix",
-                        de: currentUserData.uid,
-                        para: receiverId,
-                        valor: val,
-                        data: new Date(),
-                        descricao: desc,
-                        status: "completado"
-                    });
+                
+                const destinationDoc = usersSnapshot.docs[0];
+                const destinationData = destinationDoc.data();
+                const destinationUid = destinationDoc.id;
+                
+                // Update sender balance
+                await updateDoc(doc(db, 'users', currentUser.uid), {
+                    saldo: currentUserData.saldo - amount
                 });
-
-                alert("PIX enviado com sucesso!");
-                document.getElementById('pix-form').reset();
-                switchView('dashboard');
-            } catch (err) {
-                alert("Erro na transação: " + err.message);
+                
+                // Update receiver balance
+                await updateDoc(doc(db, 'users', destinationUid), {
+                    saldo: destinationData.saldo + amount
+                });
+                
+                // Create transaction record
+                await setDoc(doc(collection(db, 'transacoes')), {
+                    tipo: 'pix',
+                    de: currentUser.uid,
+                    para: destinationUid,
+                    valor: amount,
+                    data: serverTimestamp(),
+                    descricao: description,
+                    status: 'concluida',
+                    nomeRemetente: currentUserData.nome,
+                    nomeDestinatario: destinationData.nome
+                });
+                
+                showNotification(`PIX de R$ ${amount.toFixed(2)} enviado com sucesso!`, 'success');
+                document.getElementById('pixForm').reset();
+                
+                await loadUserData();
+                loadTransactions();
+            } catch (error) {
+                console.error('Erro ao realizar PIX:', error);
+                showNotification('Erro ao realizar transferência', 'error');
+            } finally {
+                showLoading(false);
             }
-            showLoader(false);
+        });
+
+        // SAVINGS DEPOSIT
+        window.depositToSavings = async function() {
+            if (!currentUser || !currentUserData) return;
+            
+            if (currentUserData.status === 'congelada') {
+                showNotification('Sua conta está congelada', 'error');
+                return;
+            }
+            
+            const amount = parseFloat(document.getElementById('depositAmount').value);
+            
+            if (!amount || amount <= 0) {
+                showNotification('Valor inválido', 'error');
+                return;
+            }
+            
+            if (amount > currentUserData.saldo) {
+                showNotification('Saldo insuficiente', 'error');
+                return;
+            }
+            
+            showLoading(true);
+            
+            try {
+                await updateDoc(doc(db, 'users', currentUser.uid), {
+                    saldo: currentUserData.saldo - amount,
+                    saldoPoupanca: currentUserData.saldoPoupanca + amount
+                });
+                
+                await setDoc(doc(collection(db, 'transacoes')), {
+                    tipo: 'poupanca',
+                    de: currentUser.uid,
+                    para: currentUser.uid,
+                    valor: amount,
+                    data: serverTimestamp(),
+                    descricao: 'Depósito na poupança',
+                    status: 'concluida',
+                    nomeRemetente: currentUserData.nome,
+                    nomeDestinatario: 'Poupança'
+                });
+                
+                showNotification(`R$ ${amount.toFixed(2)} depositado na poupança!`, 'success');
+                document.getElementById('depositAmount').value = '';
+                
+                await loadUserData();
+                loadTransactions();
+            } catch (error) {
+                console.error('Erro ao depositar:', error);
+                showNotification('Erro ao depositar na poupança', 'error');
+            } finally {
+                showLoading(false);
+            }
         };
 
-        // --- UI UPDATES ---
-
-        const updateUI = (data) => {
-            document.getElementById('user-display-name').innerText = data.nome;
-            document.getElementById('user-display-email').innerText = data.email;
-            document.getElementById('user-initials').innerText = data.nome.charAt(0).toUpperCase();
+        // SAVINGS WITHDRAWAL
+        window.withdrawFromSavings = async function() {
+            if (!currentUser || !currentUserData) return;
             
-            document.getElementById('dash-balance').innerText = formatCurrency(data.saldo);
-            document.getElementById('dash-poupanca').innerText = formatCurrency(data.saldoPoupanca);
-            document.getElementById('dash-pix-key').innerText = `Chave: ${data.chavePix}`;
-            document.getElementById('my-pix-key-display').innerText = data.chavePix;
-            document.getElementById('view-subtitle').innerText = `Bem-vindo de volta, ${data.nome.split(' ')[0]}!`;
-
-            // Savings View
-            document.getElementById('poup-balance-main').innerText = formatCurrency(data.saldoPoupanca);
-
-            // Admin Logic
-            if (data.role === 'admin') {
-                document.getElementById('admin-nav-item').classList.remove('hidden');
-                loadAdminData();
+            if (currentUserData.status === 'congelada') {
+                showNotification('Sua conta está congelada', 'error');
+                return;
+            }
+            
+            const amount = parseFloat(document.getElementById('withdrawAmount').value);
+            
+            if (!amount || amount <= 0) {
+                showNotification('Valor inválido', 'error');
+                return;
+            }
+            
+            if (amount > currentUserData.saldoPoupanca) {
+                showNotification('Saldo insuficiente na poupança', 'error');
+                return;
+            }
+            
+            showLoading(true);
+            
+            try {
+                await updateDoc(doc(db, 'users', currentUser.uid), {
+                    saldo: currentUserData.saldo + amount,
+                    saldoPoupanca: currentUserData.saldoPoupanca - amount
+                });
+                
+                await setDoc(doc(collection(db, 'transacoes')), {
+                    tipo: 'poupanca',
+                    de: currentUser.uid,
+                    para: currentUser.uid,
+                    valor: -amount,
+                    data: serverTimestamp(),
+                    descricao: 'Resgate da poupança',
+                    status: 'concluida',
+                    nomeRemetente: 'Poupança',
+                    nomeDestinatario: currentUserData.nome
+                });
+                
+                showNotification(`R$ ${amount.toFixed(2)} resgatado da poupança!`, 'success');
+                document.getElementById('withdrawAmount').value = '';
+                
+                await loadUserData();
+                loadTransactions();
+            } catch (error) {
+                console.error('Erro ao resgatar:', error);
+                showNotification('Erro ao resgatar da poupança', 'error');
+            } finally {
+                showLoading(false);
             }
         };
 
-        const switchView = (viewName) => {
-            activeView = viewName;
-            document.querySelectorAll('#view-container > div').forEach(div => div.classList.add('hidden'));
-            document.getElementById(`view-${viewName}`).classList.remove('hidden');
+        // SAVINGS EARNINGS (AUTO)
+        function startSavingsEarnings() {
+            if (savingsInterval) return;
             
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.classList.toggle('active', link.dataset.view === viewName);
-            });
+            savingsInterval = setInterval(async () => {
+                if (!currentUser || !currentUserData || currentUserData.saldoPoupanca <= 0) return;
+                
+                const earning = 0.01;
+                
+                try {
+                    await updateDoc(doc(db, 'users', currentUser.uid), {
+                        saldoPoupanca: currentUserData.saldoPoupanca + earning
+                    });
+                    
+                    await setDoc(doc(collection(db, 'rendimentos')), {
+                        userId: currentUser.uid,
+                        valor: earning,
+                        data: serverTimestamp()
+                    });
+                    
+                    await loadUserData();
+                } catch (error) {
+                    console.error('Erro no rendimento automático:', error);
+                }
+            }, 3000); // 3 seconds
+        }
 
-            const titles = {
-                dashboard: "Dashboard",
-                pix: "Área PIX",
-                poupanca: "Poupança & Investimento",
-                extrato: "Extrato Detalhado",
-                admin: "Painel de Controle Admin"
+        function stopSavingsEarnings() {
+            if (savingsInterval) {
+                clearInterval(savingsInterval);
+                savingsInterval = null;
+            }
+        }
+
+        // LOAD TRANSACTIONS
+        async function loadTransactions() {
+            if (!currentUser) return;
+            
+            try {
+                const q = query(
+                    collection(db, 'transacoes'),
+                    where('de', '==', currentUser.uid),
+                    orderBy('data', 'desc'),
+                    limit(10)
+                );
+                
+                const q2 = query(
+                    collection(db, 'transacoes'),
+                    where('para', '==', currentUser.uid),
+                    orderBy('data', 'desc'),
+                    limit(10)
+                );
+                
+                const [snapshot1, snapshot2] = await Promise.all([
+                    getDocs(q),
+                    getDocs(q2)
+                ]);
+                
+                const transactions = [];
+                
+                snapshot1.forEach(doc => {
+                    const data = doc.data();
+                    transactions.push({ id: doc.id, ...data, direction: 'out' });
+                });
+                
+                snapshot2.forEach(doc => {
+                    const data = doc.data();
+                    if (data.de !== currentUser.uid) {
+                        transactions.push({ id: doc.id, ...data, direction: 'in' });
+                    }
+                });
+                
+                transactions.sort((a, b) => {
+                    if (!a.data || !b.data) return 0;
+                    return b.data.toMillis() - a.data.toMillis();
+                });
+                
+                const recent = transactions.slice(0, 5);
+                allTransactionsData = transactions;
+                
+                renderTransactions(recent, 'recentTransactions');
+                renderTransactions(transactions, 'allTransactions');
+                updateTransactionStats(transactions);
+            } catch (error) {
+                console.error('Erro ao carregar transações:', error);
+            }
+        }
+
+        // RENDER TRANSACTIONS
+        function renderTransactions(transactions, containerId) {
+            const container = document.getElementById(containerId);
+            
+            if (!transactions || transactions.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <h3>Nenhuma transação encontrada</h3>
+                        <p>Suas transações aparecerão aqui</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = transactions.map(t => {
+                const isPositive = t.direction === 'in' || (t.tipo === 'poupanca' && t.valor > 0);
+                const icon = getTransactionIcon(t.tipo);
+                const date = t.data ? t.data.toDate().toLocaleDateString('pt-BR') : '-';
+                const time = t.data ? t.data.toDate().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : '';
+                
+                return `
+                    <div class="transaction-item">
+                        <div class="transaction-info">
+                            <div class="transaction-icon ${t.tipo}">
+                                <i class="${icon}"></i>
+                            </div>
+                            <div class="transaction-details">
+                                <h4>${t.descricao}</h4>
+                                <p>${t.direction === 'in' ? 'De: ' + (t.nomeRemetente || 'Sistema') : 'Para: ' + (t.nomeDestinatario || 'Sistema')}</p>
+                            </div>
+                        </div>
+                        <div class="transaction-amount ${isPositive ? 'positive' : 'negative'}">
+                            <div class="amount">${isPositive ? '+' : '-'} ${formatCurrency(Math.abs(t.valor))}</div>
+                            <div class="date">${date} ${time}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function getTransactionIcon(tipo) {
+            const icons = {
+                'pix': 'fas fa-exchange-alt',
+                'deposito': 'fas fa-plus-circle',
+                'saque': 'fas fa-minus-circle',
+                'poupanca': 'fas fa-piggy-bank'
             };
-            document.getElementById('view-title').innerText = titles[viewName];
+            return icons[tipo] || 'fas fa-circle';
+        }
+
+        // UPDATE TRANSACTION STATS
+        function updateTransactionStats(transactions) {
+            const currentMonth = new Date().getMonth();
+            const currentYear = new Date().getFullYear();
+            
+            const monthTransactions = transactions.filter(t => {
+                if (!t.data) return false;
+                const date = t.data.toDate();
+                return date.getMonth() === currentMonth && date.getFullYear() === currentYear;
+            });
+            
+            const totalMoved = monthTransactions.reduce((sum, t) => sum + Math.abs(t.valor), 0);
+            
+            document.getElementById('monthTransactions').textContent = monthTransactions.length;
+            document.getElementById('totalMoved').textContent = formatCurrency(totalMoved);
+        }
+
+        // LOAD EARNINGS
+        async function loadEarnings() {
+            if (!currentUser) return;
+            
+            try {
+                const q = query(
+                    collection(db, 'rendimentos'),
+                    where('userId', '==', currentUser.uid),
+                    orderBy('data', 'desc'),
+                    limit(20)
+                );
+                
+                const snapshot = await getDocs(q);
+                const earnings = [];
+                let total = 0;
+                
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    earnings.push({ id: doc.id, ...data });
+                    total += data.valor;
+                });
+                
+                document.getElementById('totalEarnings').textContent = formatCurrency(total);
+                
+                const container = document.getElementById('earningsHistory');
+                
+                if (earnings.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-chart-area"></i>
+                            <h3>Nenhum rendimento ainda</h3>
+                            <p>Transfira dinheiro para a poupança e comece a render</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                container.innerHTML = earnings.map(e => {
+                    const date = e.data ? e.data.toDate().toLocaleDateString('pt-BR') : '-';
+                    const time = e.data ? e.data.toDate().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : '';
+                    
+                    return `
+                        <div class="transaction-item">
+                            <div class="transaction-info">
+                                <div class="transaction-icon" style="background: #00c853;">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                                <div class="transaction-details">
+                                    <h4>Rendimento Automático</h4>
+                                    <p>Poupança Marcos Bank</p>
+                                </div>
+                            </div>
+                            <div class="transaction-amount positive">
+                                <div class="amount">+ ${formatCurrency(e.valor)}</div>
+                                <div class="date">${date} ${time}</div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } catch (error) {
+                console.error('Erro ao carregar rendimentos:', error);
+            }
+        }
+
+        // FILTER TRANSACTIONS
+        window.filterTransactions = function() {
+            const type = document.getElementById('filterType').value;
+            const dateStart = document.getElementById('filterDateStart').value;
+            const dateEnd = document.getElementById('filterDateEnd').value;
+            
+            let filtered = [...allTransactionsData];
+            
+            if (type !== 'all') {
+                filtered = filtered.filter(t => t.tipo === type);
+            }
+            
+            if (dateStart) {
+                const start = new Date(dateStart);
+                filtered = filtered.filter(t => {
+                    if (!t.data) return false;
+                    return t.data.toDate() >= start;
+                });
+            }
+            
+            if (dateEnd) {
+                const end = new Date(dateEnd);
+                end.setHours(23, 59, 59);
+                filtered = filtered.filter(t => {
+                    if (!t.data) return false;
+                    return t.data.toDate() <= end;
+                });
+            }
+            
+            renderTransactions(filtered, 'allTransactions');
         };
 
-        // --- ADMIN FUNCTIONS ---
+        window.clearFilters = function() {
+            document.getElementById('filterType').value = 'all';
+            document.getElementById('filterDateStart').value = '';
+            document.getElementById('filterDateEnd').value = '';
+            renderTransactions(allTransactionsData, 'allTransactions');
+        };
 
-        const loadAdminData = async () => {
-            const usersSnap = await getDocs(collection(db, "users"));
-            const transSnap = await getDocs(collection(db, "transacoes"));
+        // ADMIN PANEL
+        async function loadAdminData() {
+            try {
+                const usersSnapshot = await getDocs(collection(db, 'users'));
+                const transactionsSnapshot = await getDocs(collection(db, 'transacoes'));
+                
+                let totalUsers = 0;
+                let totalMoney = 0;
+                let totalVolume = 0;
+                
+                const users = [];
+                
+                usersSnapshot.forEach(doc => {
+                    const data = doc.data();
+                    users.push({ uid: doc.id, ...data });
+                    totalUsers++;
+                    totalMoney += (data.saldo || 0) + (data.saldoPoupanca || 0);
+                });
+                
+                transactionsSnapshot.forEach(doc => {
+                    const data = doc.data();
+                    totalVolume += Math.abs(data.valor || 0);
+                });
+                
+                document.getElementById('totalUsers').textContent = totalUsers;
+                document.getElementById('totalMoney').textContent = formatCurrency(totalMoney);
+                document.getElementById('totalTransactions').textContent = transactionsSnapshot.size;
+                document.getElementById('totalVolume').textContent = formatCurrency(totalVolume);
+                
+                renderUsersTable(users);
+            } catch (error) {
+                console.error('Erro ao carregar dados admin:', error);
+            }
+        }
+
+        function renderUsersTable(users) {
+            const tbody = document.getElementById('usersTableBody');
             
-            document.getElementById('admin-total-users').innerText = usersSnap.size;
-            document.getElementById('admin-total-trans').innerText = transSnap.size;
+            if (users.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" style="text-align: center; padding: 32px;">
+                            Nenhum usuário encontrado
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
             
-            let totalMoney = 0;
-            const tableBody = document.getElementById('admin-users-table');
-            tableBody.innerHTML = '';
-
-            usersSnap.forEach(uDoc => {
-                const u = uDoc.data();
-                totalMoney += (u.saldo + u.saldoPoupanca);
-
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td><strong>${u.nome}</strong></td>
+            tbody.innerHTML = users.map(u => `
+                <tr>
+                    <td>${u.nome}</td>
                     <td>${u.email}</td>
                     <td>${formatCurrency(u.saldo)}</td>
-                    <td><code>${u.chavePix}</code></td>
-                    <td><span class="status-badge status-${u.status}">${u.status}</span></td>
-                    <td class="flex gap-10">
-                        <button class="btn-sm btn-success-sm" onclick="adminAddBalance('${u.uid}')"><i class="fas fa-plus"></i></button>
-                        <button class="btn-sm btn-danger-sm" onclick="adminFreeze('${u.uid}', '${u.status}')"><i class="fas ${u.status === 'ativa' ? 'fa-lock' : 'fa-unlock'}"></i></button>
+                    <td>${formatCurrency(u.saldoPoupanca)}</td>
+                    <td>
+                        <span class="user-status ${u.status === 'ativa' ? 'active' : 'frozen'}">
+                            ${u.status}
+                        </span>
                     </td>
-                `;
-                tableBody.appendChild(tr);
-            });
+                    <td>
+                        <span class="badge ${u.role === 'admin' ? 'admin' : 'user'}">
+                            ${u.role}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="admin-actions">
+                            <button class="btn-sm btn-success" onclick="openAdminModal('add', '${u.uid}')">
+                                <i class="fas fa-plus"></i> Add
+                            </button>
+                            <button class="btn-sm btn-danger" onclick="openAdminModal('remove', '${u.uid}')">
+                                <i class="fas fa-minus"></i> Rem
+                            </button>
+                            <button class="btn-sm btn-warning" onclick="openAdminModal('reset', '${u.uid}')">
+                                <i class="fas fa-redo"></i> Reset
+                            </button>
+                            <button class="btn-sm ${u.status === 'ativa' ? 'btn-danger' : 'btn-success'}" onclick="toggleAccountStatus('${u.uid}', '${u.status}')">
+                                <i class="fas fa-${u.status === 'ativa' ? 'lock' : 'unlock'}"></i>
+                                ${u.status === 'ativa' ? 'Congelar' : 'Descongelar'}
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
 
-            document.getElementById('admin-total-money').innerText = formatCurrency(totalMoney);
+        window.searchUser = async function() {
+            const search = document.getElementById('adminSearchEmail').value.trim().toLowerCase();
+            
+            if (!search) {
+                loadAdminData();
+                return;
+            }
+            
+            try {
+                const usersSnapshot = await getDocs(collection(db, 'users'));
+                const users = [];
+                
+                usersSnapshot.forEach(doc => {
+                    const data = doc.data();
+                    if (
+                        data.email.toLowerCase().includes(search) ||
+                        data.chavePix.toLowerCase().includes(search) ||
+                        data.nome.toLowerCase().includes(search)
+                    ) {
+                        users.push({ uid: doc.id, ...data });
+                    }
+                });
+                
+                renderUsersTable(users);
+            } catch (error) {
+                console.error('Erro ao buscar usuário:', error);
+                showNotification('Erro ao buscar usuário', 'error');
+            }
         };
 
-        window.adminAddBalance = async (uid) => {
-            const val = parseFloat(prompt("Valor a adicionar (R$):"));
-            if (val && !isNaN(val)) {
-                await updateDoc(doc(db, "users", uid), { saldo: increment(val) });
-                alert("Saldo atualizado!");
+        window.openAdminModal = function(action, uid) {
+            adminModalAction = action;
+            adminModalTargetUid = uid;
+            
+            const modal = document.getElementById('adminModal');
+            const title = document.getElementById('modalTitle');
+            const label = document.getElementById('modalLabel');
+            
+            if (action === 'add') {
+                title.textContent = 'Adicionar Saldo';
+                label.textContent = 'Valor a adicionar:';
+            } else if (action === 'remove') {
+                title.textContent = 'Remover Saldo';
+                label.textContent = 'Valor a remover:';
+            } else if (action === 'reset') {
+                title.textContent = 'Resetar Saldo';
+                label.textContent = 'Novo saldo:';
+            }
+            
+            modal.classList.add('active');
+        };
+
+        window.closeModal = function() {
+            document.getElementById('adminModal').classList.remove('active');
+            document.getElementById('modalInput').value = '';
+            adminModalAction = null;
+            adminModalTargetUid = null;
+        };
+
+        window.executeAdminAction = async function() {
+            if (!adminModalAction || !adminModalTargetUid) return;
+            
+            const value = parseFloat(document.getElementById('modalInput').value);
+            
+            if (!value || value <= 0) {
+                showNotification('Valor inválido', 'error');
+                return;
+            }
+            
+            showLoading(true);
+            
+            try {
+                const userDoc = await getDoc(doc(db, 'users', adminModalTargetUid));
+                if (!userDoc.exists()) {
+                    showNotification('Usuário não encontrado', 'error');
+                    showLoading(false);
+                    return;
+                }
+                
+                const userData = userDoc.data();
+                let newBalance = userData.saldo;
+                
+                if (adminModalAction === 'add') {
+                    newBalance += value;
+                } else if (adminModalAction === 'remove') {
+                    newBalance = Math.max(0, newBalance - value);
+                } else if (adminModalAction === 'reset') {
+                    newBalance = value;
+                }
+                
+                await updateDoc(doc(db, 'users', adminModalTargetUid), {
+                    saldo: newBalance
+                });
+                
+                await setDoc(doc(collection(db, 'transacoes')), {
+                    tipo: 'deposito',
+                    de: 'admin',
+                    para: adminModalTargetUid,
+                    valor: adminModalAction === 'remove' ? -value : value,
+                    data: serverTimestamp(),
+                    descricao: `Operação administrativa: ${adminModalAction}`,
+                    status: 'concluida',
+                    nomeRemetente: 'Admin',
+                    nomeDestinatario: userData.nome
+                });
+                
+                showNotification('Operação realizada com sucesso!', 'success');
+                closeModal();
+                loadAdminData();
+                
+                if (adminModalTargetUid === currentUser.uid) {
+                    await loadUserData();
+                }
+            } catch (error) {
+                console.error('Erro na operação admin:', error);
+                showNotification('Erro ao executar operação', 'error');
+            } finally {
+                showLoading(false);
+            }
+        };
+
+        window.toggleAccountStatus = async function(uid, currentStatus) {
+            const newStatus = currentStatus === 'ativa' ? 'congelada' : 'ativa';
+            
+            if (!confirm(`Deseja realmente ${newStatus === 'congelada' ? 'congelar' : 'descongelar'} esta conta?`)) {
+                return;
+            }
+            
+            showLoading(true);
+            
+            try {
+                await updateDoc(doc(db, 'users', uid), {
+                    status: newStatus
+                });
+                
+                showNotification(`Conta ${newStatus === 'congelada' ? 'congelada' : 'descongelada'} com sucesso!`, 'success');
+                loadAdminData();
+                
+                if (uid === currentUser.uid) {
+                    await loadUserData();
+                }
+            } catch (error) {
+                console.error('Erro ao alterar status:', error);
+                showNotification('Erro ao alterar status da conta', 'error');
+            } finally {
+                showLoading(false);
+            }
+        };
+
+        // UI FUNCTIONS
+        function showAuth() {
+            document.getElementById('authWrapper').style.display = 'flex';
+            document.getElementById('dashboard').classList.remove('active');
+        }
+
+        function showDashboard() {
+            document.getElementById('authWrapper').style.display = 'none';
+            document.getElementById('dashboard').classList.add('active');
+            setupRealtimeUserData();
+        }
+
+        window.switchSection = function(section) {
+            const sections = document.querySelectorAll('.section');
+            const tabs = document.querySelectorAll('.nav-tab');
+            
+            sections.forEach(s => s.classList.remove('active'));
+            tabs.forEach(t => t.classList.remove('active'));
+            
+            document.getElementById(section + 'Section').classList.add('active');
+            event.target.classList.add('active');
+            
+            if (section === 'admin') {
                 loadAdminData();
             }
         };
 
-        window.adminFreeze = async (uid, currentStatus) => {
-            const newStatus = currentStatus === 'ativa' ? 'congelada' : 'ativa';
-            await updateDoc(doc(db, "users", uid), { status: newStatus });
-            alert("Status alterado!");
-            loadAdminData();
+        window.copyPixKey = function() {
+            if (!currentUserData) return;
+            
+            navigator.clipboard.writeText(currentUserData.chavePix).then(() => {
+                showNotification('Chave PIX copiada!', 'success');
+            }).catch(() => {
+                showNotification('Erro ao copiar chave PIX', 'error');
+            });
         };
 
-        // --- EVENT BINDING ---
+        function formatCurrency(value) {
+            return new Intl.NumberFormat('pt-BR', {
+                style: 'currency',
+                currency: 'BRL'
+            }).format(value);
+        }
 
-        // View Switching
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                switchView(link.dataset.view);
-            });
-        });
-
-        // Auth Toggles
-        document.getElementById('go-to-register').addEventListener('click', () => {
-            document.getElementById('login-card').classList.add('hidden');
-            document.getElementById('register-card').classList.remove('hidden');
-        });
-
-        document.getElementById('go-to-login').addEventListener('click', () => {
-            document.getElementById('register-card').classList.add('hidden');
-            document.getElementById('login-card').classList.remove('hidden');
-        });
-
-        // Form Submits
-        document.getElementById('register-form').addEventListener('submit', handleRegister);
-        document.getElementById('login-form').addEventListener('submit', handleLogin);
-        document.getElementById('pix-form').addEventListener('submit', handlePix);
-
-        // Logout
-        document.getElementById('btn-logout').addEventListener('click', () => {
-            signOut(auth).then(() => location.reload());
-        });
-
-        // Savings Actions
-        document.getElementById('btn-save-poup').addEventListener('click', async () => {
-            const val = parseFloat(document.getElementById('poup-save-amount').value);
-            if (val > 0 && val <= currentUserData.saldo) {
-                showLoader(true);
-                const ref = doc(db, "users", currentUserData.uid);
-                await updateDoc(ref, {
-                    saldo: increment(-val),
-                    saldoPoupanca: increment(val)
-                });
-                await addDoc(collection(db, "transacoes"), {
-                    tipo: "poupanca", de: currentUserData.uid, para: currentUserData.uid,
-                    valor: val, data: new Date(), descricao: "Aplicação Poupança", status: "completado"
-                });
-                document.getElementById('poup-save-amount').value = '';
-                showLoader(false);
-            } else { alert("Saldo insuficiente ou valor inválido."); }
-        });
-
-        document.getElementById('btn-get-poup').addEventListener('click', async () => {
-            const val = parseFloat(document.getElementById('poup-get-amount').value);
-            if (val > 0 && val <= currentUserData.saldoPoupanca) {
-                showLoader(true);
-                const ref = doc(db, "users", currentUserData.uid);
-                await updateDoc(ref, {
-                    saldo: increment(val),
-                    saldoPoupanca: increment(-val)
-                });
-                await addDoc(collection(db, "transacoes"), {
-                    tipo: "poupanca", de: currentUserData.uid, para: currentUserData.uid,
-                    valor: val, data: new Date(), descricao: "Resgate Poupança", status: "completado"
-                });
-                document.getElementById('poup-get-amount').value = '';
-                showLoader(false);
-            } else { alert("Saldo na poupança insuficiente."); }
-        });
-
-        // --- AUTH OBSERVER ---
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                document.getElementById('auth-container').classList.add('hidden');
-                document.getElementById('app-container').classList.remove('hidden');
-                initUserListeners(user.uid);
-                setTimeout(() => {
-                    initChart();
-                    showLoader(false);
-                }, 1500);
+        function showNotification(message, type = 'info') {
+            const notification = document.getElementById('notification');
+            const title = document.getElementById('notificationTitle');
+            const msg = document.getElementById('notificationMessage');
+            
+            notification.className = `notification ${type}`;
+            
+            if (type === 'success') {
+                title.textContent = 'Sucesso!';
+                notification.querySelector('i').className = 'fas fa-check-circle';
+            } else if (type === 'error') {
+                title.textContent = 'Erro!';
+                notification.querySelector('i').className = 'fas fa-times-circle';
             } else {
-                document.getElementById('auth-container').classList.remove('hidden');
-                document.getElementById('app-container').classList.add('hidden');
-                showLoader(false);
+                title.textContent = 'Informação';
+                notification.querySelector('i').className = 'fas fa-info-circle';
             }
-        });
+            
+            msg.textContent = message;
+            notification.classList.add('active');
+            
+            setTimeout(() => {
+                notification.classList.remove('active');
+            }, 4000);
+        }
 
-        // --- CHART JS ---
-        const initChart = () => {
-            const ctx = document.getElementById('balanceChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
-                    datasets: [{
-                        label: 'Evolução Patrimonial',
-                        data: [100, 450, 300, 900, 1200, 1550],
-                        borderColor: '#dc2626',
-                        backgroundColor: 'rgba(220, 38, 38, 0.1)',
-                        fill: true,
-                        tension: 0.4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: { legend: { display: false } },
-                    scales: { y: { beginAtZero: true } }
-                }
-            });
-        };
-
-        // Window Helper to Modal
-        window.closeModal = () => {
-            document.getElementById('generic-modal').classList.remove('active');
-        };
-
+        function showLoading(show) {
+            const overlay = document.getElementById('loadingOverlay');
+            if (show) {
+                overlay.classList.add('active');
+            } else {
+                overlay.classList.remove('active');
+            }
+        }
     </script>
 </body>
 </html>
