@@ -1,821 +1,1388 @@
+Certamente. Abaixo está o código completo do **Marcos Bank**, integrado ao Firebase, com todas as funcionalidades solicitadas em um único arquivo.
+
+```html
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Premium Chat Interface</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
+    <title>Marcos Bank | Fintech Premium</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        /* ==========================================================================
-           CSS - ESTILIZAÇÃO PREMIUM (GLASSMORPHISM & DARK MODE)
-           ========================================================================== */
-        
         :root {
-            /* Cores Dark Mode (Padrão) */
-            --bg-deep: #0f0f0f;
-            --sidebar-bg: #171717;
-            --header-bg: rgba(15, 15, 15, 0.8);
-            --text-primary: #f0f0f0;
-            --text-secondary: #a0a0a0;
-            --accent-color: #3b82f6;
-            --accent-glow: rgba(59, 130, 246, 0.4);
-            --border-color: rgba(255, 255, 255, 0.1);
-            --glass-bg: rgba(255, 255, 255, 0.03);
-            --msg-user-bg: #2f2f2f;
-            --msg-ai-bg: transparent;
-            --input-bg: #212121;
+            --primary: #dc2626;
+            --primary-dark: #991b1b;
+            --secondary: #f3f4f6;
+            --white: #ffffff;
+            --black: #0f172a;
+            --gray-100: #f1f5f9;
+            --gray-200: #e2e8f0;
+            --gray-400: #94a3b8;
+            --gray-600: #475569;
+            --success: #10b981;
             --danger: #ef4444;
-            --success: #22c55e;
-            
-            /* Efeitos */
-            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
-            --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.4);
-            --transition-fast: all 0.2s ease;
-            --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        /* Light Mode Overrides */
-        body.light-mode {
-            --bg-deep: #f9f9f9;
-            --sidebar-bg: #ffffff;
-            --header-bg: rgba(249, 249, 249, 0.8);
-            --text-primary: #1a1a1a;
-            --text-secondary: #666666;
-            --border-color: rgba(0, 0, 0, 0.1);
-            --glass-bg: rgba(0, 0, 0, 0.05);
-            --msg-user-bg: #e5e7eb;
-            --input-bg: #ffffff;
+            --warning: #f59e0b;
+            --sidebar-width: 260px;
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
+            font-family: 'Plus Jakarta Sans', sans-serif;
         }
 
         body {
-            background-color: var(--bg-deep);
-            color: var(--text-primary);
-            height: 100vh;
-            width: 100vw;
-            display: flex;
-            overflow: hidden;
-            transition: background-color 0.5s ease;
+            background-color: var(--gray-100);
+            color: var(--black);
+            overflow-x: hidden;
+            min-height: 100vh;
         }
 
-        /* --- SIDEBAR --- */
-        .sidebar {
-            width: 280px;
-            background-color: var(--sidebar-bg);
-            border-right: 1px solid var(--border-color);
-            display: flex;
-            flex-direction: column;
-            z-index: 100;
-            transition: transform 0.3s ease, var(--transition-smooth);
-        }
-
-        .sidebar-header {
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: var(--text-primary);
-        }
-
-        .brand-icon {
-            width: 35px;
-            height: 35px;
-            background: linear-gradient(135deg, var(--accent-color), #8b5cf6);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            box-shadow: 0 4px 15px var(--accent-glow);
-        }
-
-        .btn-new-chat {
-            width: 100%;
-            padding: 12px;
-            background: transparent;
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            color: var(--text-primary);
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        button {
             cursor: pointer;
-            transition: var(--transition-fast);
-            font-weight: 500;
-        }
-
-        .btn-new-chat:hover {
-            background: var(--glass-bg);
-            border-color: var(--text-secondary);
-        }
-
-        .history-container {
-            flex: 1;
-            overflow-y: auto;
-            padding: 10px;
-        }
-
-        .history-label {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            color: var(--text-secondary);
-            padding: 10px;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-        }
-
-        .history-item {
-            padding: 12px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: var(--text-secondary);
-            transition: var(--transition-fast);
-        }
-
-        .history-item:hover {
-            background: var(--glass-bg);
-            color: var(--text-primary);
-        }
-
-        .sidebar-footer {
-            padding: 15px;
-            border-top: 1px solid var(--border-color);
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        .footer-btn {
-            width: 100%;
-            padding: 10px;
-            background: transparent;
             border: none;
-            border-radius: 8px;
-            color: var(--text-primary);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: var(--transition-fast);
+            outline: none;
+            transition: var(--transition);
         }
 
-        .footer-btn:hover {
-            background: var(--glass-bg);
+        input {
+            outline: none;
+            transition: var(--transition);
         }
 
-        /* --- ÁREA PRINCIPAL --- */
-        .main-chat {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            background: var(--bg-deep);
-        }
+        /* UTILS */
+        .hidden { display: none !important; }
+        .flex { display: flex; }
+        .center { align-items: center; justify-content: center; }
 
-        .chat-header {
-            height: 64px;
-            display: flex;
-            align-items: center;
-            padding: 0 24px;
-            border-bottom: 1px solid var(--border-color);
-            background: var(--header-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            position: sticky;
-            top: 0;
-            z-index: 50;
-        }
+        /* SCROLLBAR */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--gray-100); }
+        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
 
-        .chat-header h2 {
-            font-size: 1rem;
-            font-weight: 600;
-        }
-
-        .messages-wrapper {
-            flex: 1;
-            overflow-y: auto;
-            padding: 40px 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 30px;
-            scroll-behavior: smooth;
-        }
-
-        /* Scrollbar Customizada */
-        .messages-wrapper::-webkit-scrollbar {
-            width: 6px;
-        }
-        .messages-wrapper::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        .messages-wrapper::-webkit-scrollbar-thumb {
-            background: var(--border-color);
-            border-radius: 10px;
-        }
-
-        /* --- MENSAGENS --- */
-        .msg-row {
-            display: flex;
-            width: 100%;
-            animation: slideUp 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
-        }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
+        /* ANIMATIONS */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .msg-row.user-row { justify-content: flex-end; }
-        .msg-row.ai-row { justify-content: flex-start; }
+        .animate-fade { animation: fadeIn 0.4s ease forwards; }
 
-        .bubble {
-            max-width: 70%;
-            padding: 14px 18px;
-            border-radius: 18px;
-            font-size: 0.95rem;
-            line-height: 1.6;
-            position: relative;
-            box-shadow: var(--shadow-sm);
+        /* AUTH SCREENS */
+        #auth-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary) 0%, #7f1d1d 100%);
+            padding: 20px;
         }
 
-        .user-row .bubble {
-            background-color: var(--msg-user-bg);
-            color: var(--text-primary);
-            border-bottom-right-radius: 4px;
-            border: 1px solid var(--border-color);
+        .auth-card {
+            background: var(--white);
+            width: 100%;
+            max-width: 450px;
+            padding: 40px;
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
         }
 
-        .ai-row .bubble {
-            background-color: var(--msg-ai-bg);
-            color: var(--text-primary);
-            border-bottom-left-radius: 4px;
+        .auth-logo {
+            text-align: center;
+            margin-bottom: 30px;
         }
 
-        .bubble img {
-            max-width: 100%;
+        .auth-logo i {
+            font-size: 3rem;
+            color: var(--primary);
+        }
+
+        .auth-logo h1 {
+            font-weight: 800;
+            font-size: 1.8rem;
+            letter-spacing: -1px;
+            margin-top: 10px;
+        }
+
+        .auth-logo span { color: var(--primary); }
+
+        .form-group { margin-bottom: 20px; }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--gray-600);
+            margin-bottom: 8px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--gray-200);
             border-radius: 12px;
-            margin-bottom: 10px;
-            display: block;
-            box-shadow: var(--shadow-md);
-            border: 1px solid var(--border-color);
+            font-size: 1rem;
         }
 
-        .timestamp {
-            display: block;
-            font-size: 0.7rem;
-            color: var(--text-secondary);
-            margin-top: 8px;
-            opacity: 0.8;
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.1);
         }
 
-        /* --- INPUT COMPONENTE (BASEADO NO SOLICITADO) --- */
-        .input-container-fixed {
-            padding: 20px 0 40px 0;
-            background: linear-gradient(transparent, var(--bg-deep) 30%);
+        .btn-primary {
+            width: 100%;
+            padding: 16px;
+            background-color: var(--primary);
+            color: var(--white);
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1rem;
+            margin-top: 10px;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .auth-footer {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 0.9rem;
+            color: var(--gray-600);
+        }
+
+        .auth-footer a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        /* APP LAYOUT */
+        #app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--white);
+            border-right: 1px solid var(--gray-200);
             display: flex;
             flex-direction: column;
-            align-items: center;
+            padding: 30px 20px;
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
         }
 
-        .input-group {
-            width: 90%;
-            max-width: 800px;
-            background: var(--input-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: 12px 16px;
-            position: relative;
-            box-shadow: var(--shadow-md);
-            transition: var(--transition-smooth);
-        }
-
-        .input-group:focus-within {
-            border-color: var(--accent-color);
-            box-shadow: 0 0 20px var(--accent-glow);
-        }
-
-        .input-wrapper-inner {
+        .sidebar-logo {
             display: flex;
-            align-items: flex-end;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 50px;
+            padding-left: 10px;
+        }
+
+        .sidebar-logo i {
+            color: var(--primary);
+            font-size: 1.8rem;
+        }
+
+        .sidebar-logo h2 {
+            font-weight: 800;
+            font-size: 1.2rem;
+        }
+
+        .nav-menu {
+            list-style: none;
+            flex: 1;
+        }
+
+        .nav-item {
+            margin-bottom: 8px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 14px 18px;
+            color: var(--gray-600);
+            text-decoration: none;
+            font-weight: 600;
+            border-radius: 12px;
+            transition: var(--transition);
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background-color: rgba(220, 38, 38, 0.08);
+            color: var(--primary);
+        }
+
+        .nav-link i { font-size: 1.2rem; }
+
+        .user-profile-mini {
+            margin-top: auto;
+            padding: 20px 10px;
+            border-top: 1px solid var(--gray-200);
+            display: flex;
+            align-items: center;
             gap: 12px;
         }
 
-        #messageInput {
-            flex: 1;
-            background: transparent;
-            border: none;
-            outline: none;
-            color: var(--text-primary);
-            font-size: 1rem;
-            padding: 8px 0;
-            min-height: 24px;
-            max-height: 200px;
-            resize: none;
-            line-height: 1.5;
-        }
-
-        .icon-btn {
-            background: transparent;
-            border: none;
-            color: var(--text-secondary);
-            cursor: pointer;
-            padding: 8px;
-            border-radius: 10px;
+        .avatar {
+            width: 45px;
+            height: 45px;
+            background-color: var(--primary);
+            color: var(--white);
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: var(--transition-fast);
+            font-weight: 800;
+            font-size: 1.2rem;
         }
 
-        .icon-btn:hover {
-            background: var(--glass-bg);
-            color: var(--text-primary);
+        .profile-info h4 {
+            font-size: 0.9rem;
+            font-weight: 700;
+            max-width: 140px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        .send-btn {
-            background: var(--accent-color);
-            color: white;
-            padding: 10px;
+        .profile-info p {
+            font-size: 0.75rem;
+            color: var(--gray-400);
+        }
+
+        /* MAIN CONTENT */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: 40px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .header-title h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+        }
+
+        .header-title p {
+            color: var(--gray-600);
+            font-weight: 500;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn-icon {
+            width: 45px;
+            height: 45px;
+            background: var(--white);
             border-radius: 12px;
-            box-shadow: 0 4px 12px var(--accent-glow);
+            color: var(--gray-600);
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .send-btn:hover {
-            transform: scale(1.05);
-            filter: brightness(1.1);
+        /* DASHBOARD CARDS */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            margin-bottom: 40px;
         }
 
-        .send-btn:disabled {
-            background: #444;
-            box-shadow: none;
-            cursor: not-allowed;
-            opacity: 0.5;
-        }
-
-        /* Counter e Preview */
-        .char-counter {
-            position: absolute;
-            bottom: -22px;
-            right: 15px;
-            font-size: 0.7rem;
-            color: var(--text-secondary);
-        }
-
-        .image-preview-bar {
-            width: 100%;
-            display: none;
-            padding: 10px 0;
-            border-bottom: 1px solid var(--border-color);
-            margin-bottom: 10px;
+        .card {
+            background: var(--white);
+            padding: 30px;
+            border-radius: 24px;
+            box-shadow: var(--shadow);
             position: relative;
+            overflow: hidden;
         }
 
-        .preview-thumb {
+        .card-balance {
+            background: linear-gradient(135deg, var(--primary) 0%, #b91c1c 100%);
+            color: var(--white);
+        }
+
+        .card-label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            opacity: 0.9;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .card-value {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .pix-key-badge {
+            background: rgba(255,255,255,0.2);
+            padding: 6px 12px;
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .card-poupanca {
+            border-left: 6px solid var(--success);
+        }
+
+        .card-poupanca .card-value {
+            color: var(--black);
+        }
+
+        .stat-card {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .stat-icon {
             width: 60px;
             height: 60px;
-            border-radius: 8px;
-            object-fit: cover;
-            border: 2px solid var(--accent-color);
-        }
-
-        .close-preview {
-            position: absolute;
-            top: 5px;
-            left: 50px;
-            background: var(--danger);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            font-size: 12px;
-            cursor: pointer;
+            border-radius: 18px;
+            background: rgba(220, 38, 38, 0.1);
+            color: var(--primary);
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 1.5rem;
         }
 
-        /* --- CONTEXT MENU (BOTÃO DIREITO) --- */
-        .context-menu {
-            position: fixed;
-            background: var(--sidebar-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 5px;
-            display: none;
-            z-index: 1000;
-            box-shadow: var(--shadow-md);
-            min-width: 150px;
+        .stat-info h3 {
+            font-size: 1.4rem;
+            font-weight: 800;
         }
 
-        .context-menu-item {
-            padding: 8px 12px;
+        .stat-info p {
             font-size: 0.85rem;
-            cursor: pointer;
-            border-radius: 4px;
+            color: var(--gray-600);
+            font-weight: 600;
+        }
+
+        /* TRANSACTIONS SECTION */
+        .section-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
+
+        .transactions-list {
+            background: var(--white);
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .section-header h2 {
+            font-size: 1.3rem;
+            font-weight: 800;
+        }
+
+        .transaction-item {
             display: flex;
             align-items: center;
-            gap: 10px;
-            transition: var(--transition-fast);
+            gap: 15px;
+            padding: 18px 0;
+            border-bottom: 1px solid var(--gray-100);
         }
 
-        .context-menu-item:hover {
-            background: var(--danger);
-            color: white;
+        .transaction-item:last-child { border-bottom: none; }
+
+        .t-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
         }
 
-        /* --- BEM-VINDO / PLACEHOLDER --- */
-        .welcome-container {
-            flex: 1;
+        .t-icon.pix { background: #e0f2fe; color: #0ea5e9; }
+        .t-icon.deposito { background: #dcfce7; color: #22c55e; }
+        .t-icon.saque { background: #fee2e2; color: #ef4444; }
+        .t-icon.poupanca { background: #fef3c7; color: #f59e0b; }
+
+        .t-info { flex: 1; }
+        .t-info h4 { font-size: 0.95rem; font-weight: 700; }
+        .t-info p { font-size: 0.8rem; color: var(--gray-400); }
+
+        .t-amount {
+            text-align: right;
+            font-weight: 800;
+            font-size: 1rem;
+        }
+
+        .amount-positive { color: var(--success); }
+        .amount-negative { color: var(--danger); }
+
+        /* MODAIS */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: var(--transition);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal {
+            background: var(--white);
+            width: 100%;
+            max-width: 500px;
+            border-radius: 28px;
+            padding: 40px;
+            position: relative;
+            transform: scale(0.9);
+            transition: var(--transition);
+        }
+
+        .modal-overlay.active .modal {
+            transform: scale(1);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+            font-size: 1.5rem;
+            color: var(--gray-400);
+            background: none;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        .modal-desc {
+            color: var(--gray-600);
+            font-size: 0.95rem;
+            margin-bottom: 30px;
+        }
+
+        /* ADMIN PANEL */
+        .admin-table-container {
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .admin-table th {
+            text-align: left;
+            padding: 15px;
+            background: var(--gray-100);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--gray-600);
+            font-weight: 700;
+        }
+
+        .admin-table td {
+            padding: 15px;
+            border-bottom: 1px solid var(--gray-100);
+            font-size: 0.9rem;
+            vertical-align: middle;
+        }
+
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .status-ativa { background: #dcfce7; color: #15803d; }
+        .status-congelada { background: #fee2e2; color: #b91c1c; }
+
+        .btn-sm {
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .btn-danger-sm { background: var(--danger); color: white; }
+        .btn-success-sm { background: var(--success); color: white; }
+
+        /* LOADING OVERLAY */
+        #global-loader {
+            position: fixed;
+            inset: 0;
+            background: var(--white);
+            z-index: 9999;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            opacity: 0.6;
+            gap: 20px;
         }
 
-        .welcome-container h1 { font-size: 2rem; margin-bottom: 10px; }
-
-        /* --- RESPONSIVIDADE --- */
-        @media (max-width: 768px) {
-            .sidebar {
-                position: absolute;
-                left: -280px;
-                height: 100%;
-            }
-            .sidebar.open {
-                transform: translateX(280px);
-            }
-            .mobile-toggle {
-                display: block !important;
-            }
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid var(--gray-200);
+            border-top: 5px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
         }
 
-        .mobile-toggle {
-            display: none;
-            margin-right: 15px;
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 1024px) {
+            .dashboard-grid { grid-template-columns: 1fr; }
+            .section-grid { grid-template-columns: 1fr; }
+            .sidebar { transform: translateX(-100%); transition: transform 0.3s ease; }
+            .sidebar.mobile-open { transform: translateX(0); }
+            .main-content { margin-left: 0; padding: 20px; }
         }
     </style>
 </head>
-<body id="appBody">
+<body>
 
-    <div id="customContextMenu" class="context-menu">
-        <div class="context-menu-item" onclick="deleteTargetMessage()">
-            <span>🗑️</span> Apagar Mensagem
+    <div id="global-loader" class="center">
+        <div class="spinner"></div>
+        <p style="font-weight: 700; color: var(--primary)">Marcos Bank</p>
+    </div>
+
+    <div id="auth-container">
+        <div id="login-card" class="auth-card animate-fade">
+            <div class="auth-logo">
+                <i class="fas fa-university"></i>
+                <h1>Marcos<span>Bank</span></h1>
+            </div>
+            <form id="login-form">
+                <div class="form-group">
+                    <label>E-mail</label>
+                    <input type="email" class="form-control" id="login-email" placeholder="nome@exemplo.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Senha</label>
+                    <input type="password" class="form-control" id="login-password" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn-primary">Entrar na Conta</button>
+            </form>
+            <div class="auth-footer">
+                Não tem uma conta? <a href="#" id="go-to-register">Cadastre-se</a>
+            </div>
+        </div>
+
+        <div id="register-card" class="auth-card animate-fade hidden">
+            <div class="auth-logo">
+                <i class="fas fa-university"></i>
+                <h1>Marcos<span>Bank</span></h1>
+            </div>
+            <form id="register-form">
+                <div class="form-group">
+                    <label>Nome Completo</label>
+                    <input type="text" class="form-control" id="reg-name" placeholder="Marcos Silva" required>
+                </div>
+                <div class="form-group">
+                    <label>E-mail</label>
+                    <input type="email" class="form-control" id="reg-email" placeholder="nome@exemplo.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Senha</label>
+                    <input type="password" class="form-control" id="reg-password" placeholder="Mínimo 6 caracteres" required minlength="6">
+                </div>
+                <div class="form-group">
+                    <label>Confirmar Senha</label>
+                    <input type="password" class="form-control" id="reg-confirm" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn-primary">Criar Conta Premium</button>
+            </form>
+            <div class="auth-footer">
+                Já possui conta? <a href="#" id="go-to-login">Fazer Login</a>
+            </div>
         </div>
     </div>
 
-    <aside class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <div class="brand">
-                <div class="brand-icon">M</div>
-                <span>TESTE</span>
+    <div id="app-container" class="hidden">
+        <aside class="sidebar" id="app-sidebar">
+            <div class="sidebar-logo">
+                <i class="fas fa-university"></i>
+                <h2>Marcos<span>Bank</span></h2>
             </div>
-            <button class="btn-new-chat" onclick="createNewChat()">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                Novo Chat
-            </button>
-        </div>
-
-        <div class="history-container" id="historyList">
-            <div class="history-label">Recentes</div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="#" class="nav-link active" data-view="dashboard">
+                        <i class="fas fa-th-large"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-view="pix">
+                        <i class="fas fa-bolt"></i> Área Pix
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-view="poupanca">
+                        <i class="fas fa-piggy-bank"></i> Poupança
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-view="extrato">
+                        <i class="fas fa-list-ul"></i> Extrato
+                    </a>
+                </li>
+                <li class="nav-item" id="admin-nav-item" class="hidden">
+                    <a href="#" class="nav-link" data-view="admin">
+                        <i class="fas fa-user-shield"></i> Admin Panel
+                    </a>
+                </li>
+            </ul>
+            <div class="user-profile-mini">
+                <div class="avatar" id="user-initials">M</div>
+                <div class="profile-info">
+                    <h4 id="user-display-name">Carregando...</h4>
+                    <p id="user-display-email">email@test.com</p>
+                </div>
+                <button id="btn-logout" style="background: none; color: var(--danger); font-size: 1.2rem; margin-left: auto;">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
             </div>
+        </aside>
 
-        <div class="sidebar-footer">
-            <button class="footer-btn" onclick="toggleTheme()">
-                <span id="themeIcon">🌙</span> <span id="themeText">Modo Escuro</span>
-            </button>
-            <button class="footer-btn" onclick="clearAllMessages()">
-                <span>🗑️</span> Limpar Conversa
-            </button>
-        </div>
-    </aside>
+        <main class="main-content">
+            <header>
+                <div class="header-title">
+                    <h1 id="view-title">Dashboard</h1>
+                    <p id="view-subtitle">Bem-vindo de volta, Marcos!</p>
+                </div>
+                <div class="header-actions">
+                    <div class="btn-icon"><i class="fas fa-bell"></i></div>
+                    <div class="btn-icon"><i class="fas fa-cog"></i></div>
+                </div>
+            </header>
 
-    <main class="main-chat">
-        <header class="chat-header">
-            <button class="icon-btn mobile-toggle" onclick="toggleSidebar()">☰</button>
-            <h2 id="currentChatTitle">Novo Chat</h2>
-        </header>
+            <div id="view-container">
+                
+                <div id="view-dashboard" class="animate-fade">
+                    <div class="dashboard-grid">
+                        <div class="card card-balance">
+                            <span class="card-label">Saldo em Conta</span>
+                            <h2 class="card-value" id="dash-balance">R$ 0,00</h2>
+                            <div class="card-footer">
+                                <span class="pix-key-badge" id="dash-pix-key">Chave: ...</span>
+                                <i class="fas fa-eye" style="cursor: pointer;"></i>
+                            </div>
+                        </div>
+                        <div class="card card-poupanca">
+                            <span class="card-label" style="color: var(--gray-600)">Reserva Poupança</span>
+                            <h2 class="card-value" id="dash-poupanca">R$ 0,00</h2>
+                            <div class="card-footer">
+                                <span style="color: var(--success); font-weight: 700; font-size: 0.8rem;">
+                                    <i class="fas fa-chart-line"></i> Rendendo 0.1%/seg
+                                </span>
+                            </div>
+                        </div>
+                        <div class="card stat-card">
+                            <div class="stat-icon"><i class="fas fa-exchange-alt"></i></div>
+                            <div class="stat-info">
+                                <h3 id="dash-trans-count">0</h3>
+                                <p>Transações este mês</p>
+                            </div>
+                        </div>
+                    </div>
 
-        <section class="messages-wrapper" id="chatWindow">
-            <div class="welcome-container" id="welcomeMsg">
-                <h1>TESTE</h1>
-                <p>O que podemos criar hoje? Envie uma mensagem ou imagem.</p>
-            </div>
-            </section>
-
-        <footer class="input-container-fixed">
-            <div class="input-group">
-                <div class="image-preview-bar" id="previewBar">
-                    <img src="" id="imgPreviewSrc" class="preview-thumb">
-                    <button class="close-preview" onclick="clearImageSelection()">&times;</button>
+                    <div class="section-grid">
+                        <div class="transactions-list">
+                            <div class="section-header">
+                                <h2>Últimas Transações</h2>
+                                <button class="btn-sm" style="color: var(--primary); font-weight: 700;">Ver Tudo</button>
+                            </div>
+                            <div id="recent-transactions-list">
+                                </div>
+                        </div>
+                        <div class="card">
+                            <div class="section-header">
+                                <h2>Análise Mensal</h2>
+                            </div>
+                            <canvas id="balanceChart" height="250"></canvas>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="input-wrapper-inner">
-                    <label for="fileUpload" class="icon-btn">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>
-                    </label>
-                    <input type="file" id="fileUpload" hidden accept="image/*">
-
-                    <textarea id="messageInput" placeholder="Mensagem TESTE AI..." rows="1"></textarea>
-
-                    <button class="icon-btn send-btn" id="sendBtn" onclick="handleSend()">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
-                    </button>
+                <div id="view-pix" class="animate-fade hidden">
+                    <div class="section-grid" style="grid-template-columns: 1fr 1fr;">
+                        <div class="card">
+                            <div class="section-header">
+                                <h2>Enviar PIX</h2>
+                            </div>
+                            <p class="modal-desc">Transfira instantaneamente para qualquer chave cadastrada.</p>
+                            <form id="pix-form">
+                                <div class="form-group">
+                                    <label>Chave PIX do Destinatário</label>
+                                    <input type="text" class="form-control" id="pix-key-dest" placeholder="Digite a chave" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Valor (R$)</label>
+                                    <input type="number" step="0.01" class="form-control" id="pix-value" placeholder="0,00" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Descrição (Opcional)</label>
+                                    <input type="text" class="form-control" id="pix-desc" placeholder="Ex: Almoço">
+                                </div>
+                                <button type="submit" class="btn-primary">Confirmar Envio</button>
+                            </form>
+                        </div>
+                        <div class="card">
+                            <div class="section-header">
+                                <h2>Minha Chave PIX</h2>
+                            </div>
+                            <div style="text-align: center; padding: 20px;">
+                                <div style="background: var(--gray-100); padding: 20px; border-radius: 16px; margin-bottom: 20px;">
+                                    <p style="font-size: 0.8rem; color: var(--gray-600); margin-bottom: 5px;">Sua chave aleatória:</p>
+                                    <h3 id="my-pix-key-display" style="font-weight: 800; color: var(--primary);">---</h3>
+                                </div>
+                                <button class="btn-sm" style="background: var(--gray-200); width: 100%; padding: 12px; margin-bottom: 10px;">Copiar Chave</button>
+                                <button class="btn-sm" style="background: var(--black); color: white; width: 100%; padding: 12px;">Gerar Nova Chave</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="char-counter"><span id="charCount">0</span>/2000</div>
+
+                <div id="view-poupanca" class="animate-fade hidden">
+                    <div class="dashboard-grid">
+                        <div class="card">
+                            <span class="card-label">Saldo Guardado</span>
+                            <h2 class="card-value" id="poup-balance-main">R$ 0,00</h2>
+                            <p style="color: var(--success); font-size: 0.85rem; font-weight: 700;">
+                                <i class="fas fa-arrow-up"></i> Rendendo agora
+                            </p>
+                        </div>
+                        <div class="card">
+                            <div class="section-header"><h2>Guardar</h2></div>
+                            <div class="flex center gap-10">
+                                <input type="number" id="poup-save-amount" class="form-control" placeholder="Valor">
+                                <button id="btn-save-poup" class="btn-primary" style="margin: 0; width: auto; padding: 12px 25px;">OK</button>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="section-header"><h2>Resgatar</h2></div>
+                            <div class="flex center gap-10">
+                                <input type="number" id="poup-get-amount" class="form-control" placeholder="Valor">
+                                <button id="btn-get-poup" class="btn-primary" style="margin: 0; width: auto; padding: 12px 25px; background: var(--black);">OK</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="section-header">
+                            <h2>Histórico de Rendimentos</h2>
+                        </div>
+                        <div id="rendimentos-list">
+                            </div>
+                    </div>
+                </div>
+
+                <div id="view-admin" class="animate-fade hidden">
+                    <div class="dashboard-grid">
+                        <div class="card stat-card">
+                            <div class="stat-icon" style="background: #e0f2fe; color: #0369a1;"><i class="fas fa-users"></i></div>
+                            <div class="stat-info">
+                                <h3 id="admin-total-users">0</h3>
+                                <p>Usuários Totais</p>
+                            </div>
+                        </div>
+                        <div class="card stat-card">
+                            <div class="stat-icon" style="background: #fef3c7; color: #b45309;"><i class="fas fa-coins"></i></div>
+                            <div class="stat-info">
+                                <h3 id="admin-total-money">R$ 0</h3>
+                                <p>Volume Global</p>
+                            </div>
+                        </div>
+                        <div class="card stat-card">
+                            <div class="stat-icon" style="background: #dcfce7; color: #15803d;"><i class="fas fa-chart-bar"></i></div>
+                            <div class="stat-info">
+                                <h3 id="admin-total-trans">0</h3>
+                                <p>Transações Totais</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="section-header">
+                            <h2>Gestão de Usuários</h2>
+                            <div class="flex gap-10">
+                                <input type="text" id="admin-search" class="form-control" style="padding: 8px 15px; font-size: 0.8rem;" placeholder="Buscar email ou chave...">
+                            </div>
+                        </div>
+                        <div class="admin-table-container">
+                            <table class="admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>Nome</th>
+                                        <th>Email</th>
+                                        <th>Saldo</th>
+                                        <th>Chave PIX</th>
+                                        <th>Status</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="admin-users-table">
+                                    </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
             </div>
-        </footer>
-    </main>
+        </main>
+    </div>
 
+    <div class="modal-overlay" id="generic-modal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
+            <div id="modal-content">
+                </div>
+        </div>
+    </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { 
+            getAuth, 
+            createUserWithEmailAndPassword, 
+            signInWithEmailAndPassword, 
+            onAuthStateChanged, 
+            signOut 
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { 
+            getFirestore, 
+            doc, 
+            setDoc, 
+            getDoc, 
+            collection, 
+            query, 
+            where, 
+            onSnapshot, 
+            addDoc, 
+            orderBy, 
+            limit, 
+            updateDoc, 
+            increment,
+            getDocs,
+            runTransaction
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-<script>
-const supabaseUrl = "https://osrhdtzdbvasbejtglrb.supabase.co";
-const supabaseKey = "sb_publishable_iypphmUmhyWH9bSDf-swoA_a0wJ_JJO";
-const supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
-
-/* SEU JS TODO AQUI */
-</script>
-
-
-    <script>
-
-
-        /* ==========================================================================
-           JAVASCRIPT - LÓGICA FUNCIONAL (MODERNA & ROBUSTA)
-           ========================================================================== */
-
-        const state = {
-            messages: [],
-            selectedImage: null,
-            isDarkMode: true,
-            currentDeleteId: null
+        // CONFIGURAÇÃO
+        const firebaseConfig = {
+            apiKey: "AIzaSyBAB-JtIEMuW2--N4lL3rZX9bwMFy962s4",
+            authDomain: "bank-f34a8.firebaseapp.com",
+            projectId: "bank-f34a8",
+            storageBucket: "bank-f34a8.firebasestorage.app",
+            messagingSenderId: "807321202619",
+            appId: "1:807321202619:web:36b22940bce05f21c09e9e"
         };
 
-        // Seletores DOM
-        const chatWindow = document.getElementById('chatWindow');
-        const messageInput = document.getElementById('messageInput');
-        const fileUpload = document.getElementById('fileUpload');
-        const previewBar = document.getElementById('previewBar');
-        const imgPreviewSrc = document.getElementById('imgPreviewSrc');
-        const charCount = document.getElementById('charCount');
-        const welcomeMsg = document.getElementById('welcomeMsg');
-        const contextMenu = document.getElementById('customContextMenu');
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
 
-        // --- INICIALIZAÇÃO ---
-        window.onload = () => {
-            loadMessagesFromDB();
-            renderMessages();
-            renderHistory();
-            setupAutoResize();
+        // ESTADO GLOBAL
+        let currentUserData = null;
+        let activeView = 'dashboard';
+        let rendimentoInterval = null;
+
+        // --- CORE FUNCTIONS ---
+
+        const showLoader = (show) => {
+            document.getElementById('global-loader').style.display = show ? 'flex' : 'none';
         };
 
-async function handleSend() {
-    const text = messageInput.value.trim();
-    if (!text && !state.selectedImage) return;
+        const formatCurrency = (val) => {
+            return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(val || 0);
+        };
 
-    const newMessage = {
-        text: text,
-        image: state.selectedImage,
-        type: 'user',
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-    };
+        const generatePixKey = () => {
+            return Math.random().toString(36).substring(2, 10) + Math.random().toString(36).substring(2, 10);
+        };
 
-    // SALVA NO SUPABASE
-    const { error } = await supabaseClient
-        .from('messages')
-        .insert([newMessage]);
+        // --- AUTH LOGIC ---
 
-    if (error) {
-        console.error("Erro ao salvar:", error);
-        alert("Erro ao salvar mensagem.");
-        return;
-    }
+        const handleRegister = async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('reg-name').value;
+            const email = document.getElementById('reg-email').value;
+            const pass = document.getElementById('reg-password').value;
+            const confirm = document.getElementById('reg-confirm').value;
 
-    resetInput();
-    loadMessagesFromDB();
-}
-async function loadMessagesFromDB() {
-    const { data, error } = await supabaseClient
-        .from('messages')
-        .select('*')
-        .order('id', { ascending: true });
+            if (pass !== confirm) return alert("As senhas não coincidem!");
 
-    if (error) {
-        console.error("Erro ao buscar:", error);
-        return;
-    }
+            showLoader(true);
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
+                const user = userCredential.user;
 
-    state.messages = data;
-    renderMessages();
-    scrollToBottom();
-}
+                // Create User Doc
+                await setDoc(doc(db, "users", user.uid), {
+                    uid: user.uid,
+                    nome: name,
+                    email: email,
+                    saldo: 100.00, // Welcome gift
+                    saldoPoupanca: 0.00,
+                    chavePix: generatePixKey(),
+                    status: "ativa",
+                    role: "user",
+                    createdAt: new Date()
+                });
 
+                // First Transaction
+                await addDoc(collection(db, "transacoes"), {
+                    tipo: "deposito",
+                    de: "SISTEMA",
+                    para: user.uid,
+                    valor: 100.00,
+                    data: new Date(),
+                    descricao: "Bônus de Boas-vindas Marcos Bank",
+                    status: "completado"
+                });
 
-        function resetInput() {
-            messageInput.value = '';
-            messageInput.style.height = 'auto';
-            clearImageSelection();
-            updateCharCounter();
-        }
+                location.reload();
+            } catch (error) {
+                alert("Erro ao cadastrar: " + error.message);
+                showLoader(false);
+            }
+        };
 
-        // --- MANIPULAÇÃO DE IMAGENS ---
-        fileUpload.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                if (file.size > 2 * 1024 * 1024) {
-                    alert("Imagem muito grande! Máximo 2MB.");
+        const handleLogin = async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const pass = document.getElementById('login-password').value;
+
+            showLoader(true);
+            try {
+                await signInWithEmailAndPassword(auth, email, pass);
+            } catch (error) {
+                alert("Falha no login: " + error.message);
+                showLoader(false);
+            }
+        };
+
+        // --- DATABASE LISTENERS ---
+
+        const initUserListeners = (uid) => {
+            // User Data Listener
+            onSnapshot(doc(db, "users", uid), (doc) => {
+                if (doc.exists()) {
+                    currentUserData = doc.data();
+                    updateUI(currentUserData);
+                    if(currentUserData.status === 'congelada') {
+                        alert("Sua conta foi CONGELADA. Operações bloqueadas.");
+                    }
+                }
+            });
+
+            // Transactions Listener
+            const q = query(
+                collection(db, "transacoes"), 
+                where("para", "==", uid),
+                orderBy("data", "desc"),
+                limit(10)
+            );
+            const q2 = query(
+                collection(db, "transacoes"), 
+                where("de", "==", uid),
+                orderBy("data", "desc"),
+                limit(10)
+            );
+
+            // Simple merging logic for demo purposes
+            onSnapshot(q, (snapshot) => renderTransactions());
+            onSnapshot(q2, (snapshot) => renderTransactions());
+
+            // Start Savings Profit Simulation
+            startSavingsProfit(uid);
+        };
+
+        const renderTransactions = async () => {
+            if (!auth.currentUser) return;
+            const uid = auth.currentUser.uid;
+            
+            const q = query(collection(db, "transacoes"), orderBy("data", "desc"));
+            const snapshot = await getDocs(q);
+            const listContainer = document.getElementById('recent-transactions-list');
+            listContainer.innerHTML = '';
+
+            let count = 0;
+            snapshot.forEach(doc => {
+                const t = doc.data();
+                if ((t.de === uid || t.para === uid) && count < 6) {
+                    count++;
+                    const isIncome = t.para === uid;
+                    const amountClass = isIncome ? 'amount-positive' : 'amount-negative';
+                    const prefix = isIncome ? '+' : '-';
+                    
+                    const item = document.createElement('div');
+                    item.className = 'transaction-item animate-fade';
+                    item.innerHTML = `
+                        <div class="t-icon ${t.tipo}"><i class="fas ${getTransactionIcon(t.tipo)}"></i></div>
+                        <div class="t-info">
+                            <h4>${t.descricao}</h4>
+                            <p>${new Date(t.data.seconds * 1000).toLocaleDateString()}</p>
+                        </div>
+                        <div class="t-amount ${amountClass}">${prefix} ${formatCurrency(t.valor)}</div>
+                    `;
+                    listContainer.appendChild(item);
+                }
+            });
+            document.getElementById('dash-trans-count').innerText = count;
+        };
+
+        const getTransactionIcon = (tipo) => {
+            switch(tipo) {
+                case 'pix': return 'fa-bolt';
+                case 'deposito': return 'fa-arrow-down';
+                case 'saque': return 'fa-arrow-up';
+                case 'poupanca': return 'fa-piggy-bank';
+                default: return 'fa-exchange-alt';
+            }
+        };
+
+        const startSavingsProfit = (uid) => {
+            if (rendimentoInterval) clearInterval(rendimentoInterval);
+            
+            rendimentoInterval = setInterval(async () => {
+                if (currentUserData && currentUserData.saldoPoupanca > 0 && currentUserData.status === 'ativa') {
+                    const profit = currentUserData.saldoPoupanca * 0.0001; // 0.01%
+                    
+                    try {
+                        const userRef = doc(db, "users", uid);
+                        await updateDoc(userRef, {
+                            saldoPoupanca: increment(profit)
+                        });
+
+                        await addDoc(collection(db, "rendimentos"), {
+                            userId: uid,
+                            valor: profit,
+                            data: new Date()
+                        });
+                    } catch (e) {
+                        console.error("Erro rendimento", e);
+                    }
+                }
+            }, 5000); // 5 sec for demo visibility
+        };
+
+        // --- PIX LOGIC ---
+
+        const handlePix = async (e) => {
+            e.preventDefault();
+            const key = document.getElementById('pix-key-dest').value;
+            const val = parseFloat(document.getElementById('pix-value').value);
+            const desc = document.getElementById('pix-desc').value || "Transferência PIX";
+
+            if (currentUserData.status === 'congelada') return alert("Conta congelada!");
+            if (val <= 0) return alert("Valor inválido");
+            if (val > currentUserData.saldo) return alert("Saldo insuficiente");
+            if (key === currentUserData.chavePix) return alert("Não pode enviar para si mesmo!");
+
+            showLoader(true);
+
+            try {
+                // Find receiver
+                const q = query(collection(db, "users"), where("chavePix", "==", key));
+                const snap = await getDocs(q);
+
+                if (snap.empty) {
+                    alert("Chave PIX não encontrada!");
+                    showLoader(false);
                     return;
                 }
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    state.selectedImage = event.target.result;
-                    imgPreviewSrc.src = state.selectedImage;
-                    previewBar.style.display = 'block';
-                };
-                reader.readAsDataURL(file);
+
+                const receiverDoc = snap.docs[0];
+                const receiverId = receiverDoc.id;
+
+                await runTransaction(db, async (transaction) => {
+                    const senderRef = doc(db, "users", currentUserData.uid);
+                    const receiverRef = doc(db, "users", receiverId);
+
+                    transaction.update(senderRef, { saldo: increment(-val) });
+                    transaction.update(receiverRef, { saldo: increment(val) });
+
+                    const tRef = doc(collection(db, "transacoes"));
+                    transaction.set(tRef, {
+                        tipo: "pix",
+                        de: currentUserData.uid,
+                        para: receiverId,
+                        valor: val,
+                        data: new Date(),
+                        descricao: desc,
+                        status: "completado"
+                    });
+                });
+
+                alert("PIX enviado com sucesso!");
+                document.getElementById('pix-form').reset();
+                switchView('dashboard');
+            } catch (err) {
+                alert("Erro na transação: " + err.message);
+            }
+            showLoader(false);
+        };
+
+        // --- UI UPDATES ---
+
+        const updateUI = (data) => {
+            document.getElementById('user-display-name').innerText = data.nome;
+            document.getElementById('user-display-email').innerText = data.email;
+            document.getElementById('user-initials').innerText = data.nome.charAt(0).toUpperCase();
+            
+            document.getElementById('dash-balance').innerText = formatCurrency(data.saldo);
+            document.getElementById('dash-poupanca').innerText = formatCurrency(data.saldoPoupanca);
+            document.getElementById('dash-pix-key').innerText = `Chave: ${data.chavePix}`;
+            document.getElementById('my-pix-key-display').innerText = data.chavePix;
+            document.getElementById('view-subtitle').innerText = `Bem-vindo de volta, ${data.nome.split(' ')[0]}!`;
+
+            // Savings View
+            document.getElementById('poup-balance-main').innerText = formatCurrency(data.saldoPoupanca);
+
+            // Admin Logic
+            if (data.role === 'admin') {
+                document.getElementById('admin-nav-item').classList.remove('hidden');
+                loadAdminData();
+            }
+        };
+
+        const switchView = (viewName) => {
+            activeView = viewName;
+            document.querySelectorAll('#view-container > div').forEach(div => div.classList.add('hidden'));
+            document.getElementById(`view-${viewName}`).classList.remove('hidden');
+            
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.toggle('active', link.dataset.view === viewName);
+            });
+
+            const titles = {
+                dashboard: "Dashboard",
+                pix: "Área PIX",
+                poupanca: "Poupança & Investimento",
+                extrato: "Extrato Detalhado",
+                admin: "Painel de Controle Admin"
+            };
+            document.getElementById('view-title').innerText = titles[viewName];
+        };
+
+        // --- ADMIN FUNCTIONS ---
+
+        const loadAdminData = async () => {
+            const usersSnap = await getDocs(collection(db, "users"));
+            const transSnap = await getDocs(collection(db, "transacoes"));
+            
+            document.getElementById('admin-total-users').innerText = usersSnap.size;
+            document.getElementById('admin-total-trans').innerText = transSnap.size;
+            
+            let totalMoney = 0;
+            const tableBody = document.getElementById('admin-users-table');
+            tableBody.innerHTML = '';
+
+            usersSnap.forEach(uDoc => {
+                const u = uDoc.data();
+                totalMoney += (u.saldo + u.saldoPoupanca);
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${u.nome}</strong></td>
+                    <td>${u.email}</td>
+                    <td>${formatCurrency(u.saldo)}</td>
+                    <td><code>${u.chavePix}</code></td>
+                    <td><span class="status-badge status-${u.status}">${u.status}</span></td>
+                    <td class="flex gap-10">
+                        <button class="btn-sm btn-success-sm" onclick="adminAddBalance('${u.uid}')"><i class="fas fa-plus"></i></button>
+                        <button class="btn-sm btn-danger-sm" onclick="adminFreeze('${u.uid}', '${u.status}')"><i class="fas ${u.status === 'ativa' ? 'fa-lock' : 'fa-unlock'}"></i></button>
+                    </td>
+                `;
+                tableBody.appendChild(tr);
+            });
+
+            document.getElementById('admin-total-money').innerText = formatCurrency(totalMoney);
+        };
+
+        window.adminAddBalance = async (uid) => {
+            const val = parseFloat(prompt("Valor a adicionar (R$):"));
+            if (val && !isNaN(val)) {
+                await updateDoc(doc(db, "users", uid), { saldo: increment(val) });
+                alert("Saldo atualizado!");
+                loadAdminData();
+            }
+        };
+
+        window.adminFreeze = async (uid, currentStatus) => {
+            const newStatus = currentStatus === 'ativa' ? 'congelada' : 'ativa';
+            await updateDoc(doc(db, "users", uid), { status: newStatus });
+            alert("Status alterado!");
+            loadAdminData();
+        };
+
+        // --- EVENT BINDING ---
+
+        // View Switching
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                switchView(link.dataset.view);
+            });
+        });
+
+        // Auth Toggles
+        document.getElementById('go-to-register').addEventListener('click', () => {
+            document.getElementById('login-card').classList.add('hidden');
+            document.getElementById('register-card').classList.remove('hidden');
+        });
+
+        document.getElementById('go-to-login').addEventListener('click', () => {
+            document.getElementById('register-card').classList.add('hidden');
+            document.getElementById('login-card').classList.remove('hidden');
+        });
+
+        // Form Submits
+        document.getElementById('register-form').addEventListener('submit', handleRegister);
+        document.getElementById('login-form').addEventListener('submit', handleLogin);
+        document.getElementById('pix-form').addEventListener('submit', handlePix);
+
+        // Logout
+        document.getElementById('btn-logout').addEventListener('click', () => {
+            signOut(auth).then(() => location.reload());
+        });
+
+        // Savings Actions
+        document.getElementById('btn-save-poup').addEventListener('click', async () => {
+            const val = parseFloat(document.getElementById('poup-save-amount').value);
+            if (val > 0 && val <= currentUserData.saldo) {
+                showLoader(true);
+                const ref = doc(db, "users", currentUserData.uid);
+                await updateDoc(ref, {
+                    saldo: increment(-val),
+                    saldoPoupanca: increment(val)
+                });
+                await addDoc(collection(db, "transacoes"), {
+                    tipo: "poupanca", de: currentUserData.uid, para: currentUserData.uid,
+                    valor: val, data: new Date(), descricao: "Aplicação Poupança", status: "completado"
+                });
+                document.getElementById('poup-save-amount').value = '';
+                showLoader(false);
+            } else { alert("Saldo insuficiente ou valor inválido."); }
+        });
+
+        document.getElementById('btn-get-poup').addEventListener('click', async () => {
+            const val = parseFloat(document.getElementById('poup-get-amount').value);
+            if (val > 0 && val <= currentUserData.saldoPoupanca) {
+                showLoader(true);
+                const ref = doc(db, "users", currentUserData.uid);
+                await updateDoc(ref, {
+                    saldo: increment(val),
+                    saldoPoupanca: increment(-val)
+                });
+                await addDoc(collection(db, "transacoes"), {
+                    tipo: "poupanca", de: currentUserData.uid, para: currentUserData.uid,
+                    valor: val, data: new Date(), descricao: "Resgate Poupança", status: "completado"
+                });
+                document.getElementById('poup-get-amount').value = '';
+                showLoader(false);
+            } else { alert("Saldo na poupança insuficiente."); }
+        });
+
+        // --- AUTH OBSERVER ---
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                document.getElementById('auth-container').classList.add('hidden');
+                document.getElementById('app-container').classList.remove('hidden');
+                initUserListeners(user.uid);
+                setTimeout(() => {
+                    initChart();
+                    showLoader(false);
+                }, 1500);
+            } else {
+                document.getElementById('auth-container').classList.remove('hidden');
+                document.getElementById('app-container').classList.add('hidden');
+                showLoader(false);
             }
         });
 
-        function clearImageSelection() {
-            state.selectedImage = null;
-            previewBar.style.display = 'none';
-            fileUpload.value = '';
-        }
-
-        // --- RENDERIZAÇÃO ---
-        function renderMessages() {
-            if (state.messages.length > 0) {
-                welcomeMsg.style.display = 'none';
-            } else {
-                welcomeMsg.style.display = 'flex';
-            }
-
-            chatWindow.innerHTML = '';
-            if (state.messages.length === 0) chatWindow.appendChild(welcomeMsg);
-
-            state.messages.forEach(msg => {
-                const row = document.createElement('div');
-                row.className = `msg-row ${msg.type}-row`;
-                row.dataset.id = msg.id;
-
-                let contentHtml = '';
-                if (msg.image) contentHtml += `<img src="${msg.image}" alt="Enviado">`;
-                if (msg.text) contentHtml += `<p>${msg.text.replace(/\n/g, '<br>')}</p>`;
-
-                row.innerHTML = `
-                    <div class="bubble">
-                        ${contentHtml}
-                        <span class="timestamp">${msg.timestamp}</span>
-                    </div>
-                `;
-
-                // Evento de Deletar (Botão Direito)
-                row.addEventListener('contextmenu', (e) => {
-                    e.preventDefault();
-                    showContextMenu(e.pageX, e.pageY, msg.id);
-                });
-
-                chatWindow.appendChild(row);
-            });
-        }
-
-        function scrollToBottom() {
-            chatWindow.scrollTop = chatWindow.scrollHeight;
-        }
-
-        // --- UX & INPUT ACTIONS ---
-        function setupAutoResize() {
-            messageInput.addEventListener('input', () => {
-                messageInput.style.height = 'auto';
-                messageInput.style.height = (messageInput.scrollHeight) + 'px';
-                updateCharCounter();
-            });
-
-            // Enter Key Logic
-            messageInput.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    handleSend();
+        // --- CHART JS ---
+        const initChart = () => {
+            const ctx = document.getElementById('balanceChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
+                    datasets: [{
+                        label: 'Evolução Patrimonial',
+                        data: [100, 450, 300, 900, 1200, 1550],
+                        borderColor: '#dc2626',
+                        backgroundColor: 'rgba(220, 38, 38, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true } }
                 }
             });
-        }
+        };
 
-        function updateCharCounter() {
-            const count = messageInput.value.length;
-            charCount.textContent = count;
-            if (count > 1900) charCount.style.color = 'var(--danger)';
-            else charCount.style.color = 'var(--text-secondary)';
-        }
-
-        // --- CONTEXT MENU ---
-        function showContextMenu(x, y, id) {
-            state.currentDeleteId = id;
-            contextMenu.style.display = 'block';
-            contextMenu.style.left = `${x}px`;
-            contextMenu.style.top = `${y}px`;
-        }
-
-        window.onclick = () => contextMenu.style.display = 'none';
-
-async function deleteTargetMessage() {
-    await supabaseClient
-        .from('messages')
-        .delete()
-        .eq('id', state.currentDeleteId);
-
-    loadMessagesFromDB();
-}
-
-
-
-async function clearAllMessages() {
-    if (confirm("Tem certeza que deseja apagar todo o chat?")) {
-        await supabaseClient
-            .from('messages')
-            .delete()
-            .neq('id', 0);
-
-        loadMessagesFromDB();
-    }
-}
-
-
-        // --- TEMA ---
-        function toggleTheme() {
-            state.isDarkMode = !state.isDarkMode;
-            document.body.classList.toggle('light-mode');
-            const icon = document.getElementById('themeIcon');
-            const text = document.getElementById('themeText');
-            
-            if (state.isDarkMode) {
-                icon.innerText = "🌙";
-                text.innerText = "Modo Escuro";
-            } else {
-                icon.innerText = "☀️";
-                text.innerText = "Modo Claro";
-            }
-        }
-
-        // --- SIDEBAR MOBILE ---
-        function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('open');
-        }
-
-        function renderHistory() {
-            const list = document.getElementById('historyList');
-            const items = ["Análise de código", "Ideias de Marketing", "Resumo de reunião", "Planejamento 2026"];
-            
-            items.forEach(txt => {
-                const div = document.createElement('div');
-                div.className = 'history-item';
-                div.innerHTML = `<span>💬</span> ${txt}`;
-                list.appendChild(div);
-            });
-        }
-
-        function createNewChat() {
-            if (state.messages.length > 0) {
-                if (confirm("Iniciar nova conversa? O histórico atual será mantido no sistema.")) {
-                    state.messages = [];
-                    renderMessages();
-                }
-            }
-        }
-        
-        // Simulação de digitação fake para dar vida à UI
-        function simulateAIResponse() {
-            // Apenas para efeito visual de que o front está processando
-            console.log("Processando entrada...");
-        }
+        // Window Helper to Modal
+        window.closeModal = () => {
+            document.getElementById('generic-modal').classList.remove('active');
+        };
 
     </script>
 </body>
